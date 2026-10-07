@@ -15,6 +15,21 @@
  * Everything else is the static site (env.ASSETS).
  */
 import { notifyCaptain } from "./email.js";
+import schema from "./schema.sql";
+
+// Creates the tables on first use, so a fresh database needs no manual setup
+let schemaReady = false;
+async function ensureSchema(env) {
+  if (schemaReady) return;
+  const statements = schema
+    .replace(/--.*$/gm, "")
+    .split(";")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((s) => env.DB.prepare(s));
+  await env.DB.batch(statements);
+  schemaReady = true;
+}
 
 const STATUSES = ["new", "confirmed", "declined", "done", "cancelled"];
 const DAY_STATUSES = ["off", "on call", "booked", "sunset only", "open"];
@@ -33,6 +48,7 @@ export default {
     const path = url.pathname;
 
     try {
+      if (path.startsWith("/api/") || path === "/admin" || path.startsWith("/admin/")) await ensureSchema(env);
       if (path === "/api/book" && request.method === "POST") return await book(request, env, ctx, url);
       if (path === "/api/availability" && request.method === "GET") return await availability(env);
 

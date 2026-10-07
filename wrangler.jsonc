@@ -2,6 +2,8 @@
   "name": "reel-irie-charters",
   "compatibility_date": "2026-09-01",
   "main": "worker/index.js",
+  // Lets the worker import schema.sql as text (it creates the tables on first use)
+  "rules": [{ "type": "Text", "globs": ["**/*.sql"], "fallthrough": true }],
 
   // Add the custom domain once it's connected to this Cloudflare account:
   // "routes": [
