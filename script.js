@@ -289,75 +289,74 @@ if (grid) {
   grid.innerHTML = trips.map((c) => card(c, island)).join("");
 }
 
-/* ---------- Booking pop up ---------- */
+/* ---------- Booking pop up (two simple steps) ---------- */
 const dlg = $("#booking");
 const form = $("#book-form");
 if (dlg && form) {
-  const islandSel = $("#f-island");
-  const adultSel = $("#f-adults");
-  const kidSel = $("#f-kids");
-  const kidAges = $("#kid-ages");
-  const guestNote = $("#guest-note");
+  const dateIn = $("#f-date");
   const dateNote = $("#date-note");
+  const guestNote = $("#guest-note");
   const done = $("#bk-done");
+  const count = { adults: 2, kids: 0 };
+  let step = 1;
 
   $("#trip-options").innerHTML = allTrips.map((t) => `
     <label class="tp">
       <input type="radio" name="charter" value="${t.id}">
       <span class="tp-card">
+        <span class="tp-radio" aria-hidden="true"></span>
         <span class="tp-name">${t.name}</span>
-        <span class="tp-meta">${t.hours ? `${t.hours} hrs` : "Your call"}${t.price ? ` &middot; from ${money(t.price)}` : ""}</span>
+        <span class="tp-meta">${t.hours ? `${t.hours} hrs` : "Your call"}${t.price ? ` &middot; ${money(t.price)}` : ""}</span>
       </span>
     </label>`).join("");
-  islandSel.innerHTML += ISLANDS.map((i) => `<option value="${i.id}">${i.name}</option>`).join("");
 
   const today = new Date();
   today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
-  $("#f-date").min = $("#f-alt-date").min = today.toISOString().slice(0, 10);
+  dateIn.min = today.toISOString().slice(0, 10);
 
   const tripId = () => form.elements.charter.value || "";
-  const asking = () => form.elements.request_type.value === "Question";
-  const maxGuests = () => (findTrip(tripId()) || { guests: 6 }).guests;
-  function setTrip(id) {
-    const r = $(`input[name="charter"][value="${id}"]`, form);
-    if (r) r.checked = true;
-  }
+  const trip = () => findTrip(tripId());
+  const maxGuests = () => (trip() || { guests: 6 }).guests;
+  const prettyDate = (iso) => {
+    const [y, m, d] = iso.split("-").map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+  };
 
-  function fillCounts() {
+  // Guest counters
+  function renderGuests() {
     const max = maxGuests();
-    const a = +adultSel.value || 2, k = +kidSel.value || 0;
-    adultSel.innerHTML = Array.from({ length: max }, (_, i) => `<option>${i + 1}</option>`).join("");
-    kidSel.innerHTML = Array.from({ length: max }, (_, i) => `<option>${i}</option>`).join("");
-    adultSel.value = String(Math.min(a, max));
-    kidSel.value = String(Math.min(k, max - 1));
-    checkGuests();
+    while (count.adults + count.kids > max && count.kids > 0) count.kids--;
+    count.adults = Math.max(1, Math.min(count.adults, max - count.kids));
+    $("#out-adults").textContent = count.adults;
+    $("#out-kids").textContent = count.kids;
+    $("#f-adults").value = count.adults;
+    $("#f-kids").value = count.kids;
+    const full = count.adults + count.kids >= max;
+    $$('[data-count][data-d="1"]', form).forEach((b) => (b.disabled = full));
+    $('[data-count="adults"][data-d="-1"]', form).disabled = count.adults <= 1;
+    $('[data-count="kids"][data-d="-1"]', form).disabled = count.kids <= 0;
+    guestNote.hidden = !full;
+    guestNote.innerHTML = `This trip fits up to ${max}. Bigger group? <a href="sms:${CONFIG.phoneDial}">Text Ron</a>.`;
+    $("#kid-ages").hidden = count.kids === 0;
+    $("#f-ages").required = count.kids > 0;
   }
-
-  function checkGuests() {
-    const max = maxGuests();
-    const kids = +kidSel.value;
-    const total = +adultSel.value + kids;
-    kidAges.hidden = kids === 0;
-    $("#f-ages").required = !asking() && kids > 0;
-    const over = total > max;
-    guestNote.textContent = over
-      ? `That's ${total} guests. This trip fits up to ${max}, so give us a call for bigger groups.`
-      : `${total} guest${total === 1 ? "" : "s"} total${kids ? `, including ${kids} kid${kids === 1 ? "" : "s"}` : ""}.`;
-    guestNote.classList.toggle("is-warn", over);
-    $("#guest-row").classList.toggle("invalid", over);
-    return !over;
-  }
+  form.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-count]");
+    if (!b) return;
+    count[b.dataset.count] += +b.dataset.d;
+    renderGuests();
+  });
 
   // Warn when the date doesn't fit the schedule; block days he's off
   function checkDate() {
-    const iso = $("#f-date").value;
-    const field = $("#f-date").closest(".field");
+    const iso = dateIn.value;
+    const field = dateIn.closest(".field");
     field.classList.remove("invalid");
     dateNote.hidden = true;
     dateNote.classList.remove("is-warn");
     if (!iso) return true;
     const st = dayStatus(iso);
-    const t = findTrip(tripId());
+    const t = trip();
     let msg = "", ok = true, warn = false;
     if (!st.open) {
       msg = "Captain Ron isn't available that day. Please pick another date.";
@@ -365,7 +364,7 @@ if (dlg && form) {
     } else if (t && !runsOn(st.trips, t.id)) {
       const only = st.trips.length === 1 ? `the ${tripsLabel(st)}` : "select trips";
       const usual = { Weekends: "on weekends", Weekdays: "on weekdays" }[tripDays(t.id)] || "by request";
-      msg = `${isWeekend(iso) ? "That day" : "Weekdays"} we're running ${only} only. ${t.name} usually runs ${usual}, but send the request and Ron will let you know.`;
+      msg = `${isWeekend(iso) ? "That day" : "Weekdays"} we're running ${only} only. ${t.name} usually runs ${usual}, but send it and Ron will let you know.`;
       warn = true;
     } else if (st.note) {
       msg = st.note;
@@ -376,65 +375,74 @@ if (dlg && form) {
   }
 
   function updateSummary() {
-    const t = findTrip(tripId());
-    const where = islandName(islandSel.value);
-    fillCounts();
+    const t = trip();
+    renderGuests();
     checkDate();
     $("#trip-pick").classList.remove("invalid");
-    if (!t) {
-      $("#sum-name").textContent = "Pick a trip";
-      $("#sum-meta").textContent = "Choose one to get started.";
-      return;
-    }
-    $("#sum-name").textContent = t.name;
-    const bits = t.id === "custom"
-      ? ["Tell us what you have in mind"]
+    $("#sum-name").textContent = t ? t.name : "Pick a trip";
+    const bits = !t ? ["Choose one to get started."]
+      : t.id === "custom" ? ["Tell us what you have in mind"]
       : [`${t.hours} hours`, `up to ${t.guests} guests`, t.price ? "from " + money(t.price) : "call for rate"];
-    if (where) bits.push(where);
+    const where = islandName($("#f-island").value);
+    if (t && where) bits.push(where);
     $("#sum-meta").textContent = bits.join(" · ");
   }
 
-  // Book vs. Just Asking
-  function setMode() {
-    const ask = asking();
-    form.classList.toggle("is-asking", ask);
-    $$(".booking-only", form).forEach((el) => (el.hidden = ask));
-    $("#f-date").required = !ask;
-    $("#f-ages").required = !ask && +kidSel.value > 0;
-    $("#notes-label").textContent = ask ? "Your question" : "Anything we should know?";
-    $("#f-notes").required = ask;
-    $("#submit-btn").innerHTML = ask ? "Send My Question &rarr;" : "Get Irie &rarr; Send Request";
-  }
-
   form.addEventListener("change", (e) => {
-    const n = e.target.name;
-    if (n === "charter") {
-      const t = findTrip(tripId());
-      if (t && t.time) $("#f-time").value = t.time;
-      updateSummary();
-    } else if (n === "request_type") setMode();
-    else if (n === "island") updateSummary();
-    else if (n === "adults" || n === "kids") checkGuests();
-    else if (n === "date") checkDate();
+    if (e.target.name === "charter") updateSummary();
+    if (e.target.name === "date") checkDate();
   });
 
-  function openBooking({ trip, island, date } = {}) {
+  function goTo(n) {
+    step = n;
+    $$(".bk-pane", form).forEach((p) => (p.hidden = +p.dataset.pane !== n));
+    $(".bk-back", form).hidden = n === 1;
+    $("#bk-step").textContent = `Step ${n} of 2`;
+    $("#bk-heading").textContent = n === 1 ? "Pick your trip" : "Your info";
+    $("#bk-bar").style.width = n === 1 ? "50%" : "100%";
+    $("#submit-btn").innerHTML = n === 1 ? "Next &rarr;" : "Send Request &rarr;";
+    if (n === 2) {
+      const t = trip();
+      const g = count.adults + count.kids;
+      $("#bk-recap").innerHTML = `<span>${t.name} &middot; ${prettyDate(dateIn.value)} &middot; ${g} guest${g === 1 ? "" : "s"}</span><b>Edit</b>`;
+    }
+    $(".bk-main", dlg).scrollTop = 0;
+  }
+  $$("[data-go]", dlg).forEach((b) => b.addEventListener("click", () => goTo(+b.dataset.go)));
+
+  function validStep(n) {
+    let ok = true;
+    const pane = $(`.bk-pane[data-pane="${n}"]`, form);
+    if (n === 1 && !checkDate()) ok = false; // runs first: it resets the date field's state
+    $$(".field", pane).forEach((f) => { if (n !== 1 || f !== dateIn.closest(".field")) f.classList.remove("invalid"); });
+    $$("input, textarea", pane).forEach((el) => {
+      if (el.closest("[hidden]") || ["radio", "hidden"].includes(el.type) || el.classList.contains("hp")) return;
+      if (!el.checkValidity()) { el.closest(".field")?.classList.add("invalid"); ok = false; }
+    });
+    if (n === 1) {
+      if (!tripId()) { $("#trip-pick").classList.add("invalid"); ok = false; }
+    }
+    if (!ok) {
+      const bad = $("#trip-pick.invalid input, .invalid input, .invalid textarea", pane);
+      bad?.focus({ preventScroll: true });
+      bad?.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+    return ok;
+  }
+
+  function openBooking({ trip: id, island, date } = {}) {
     form.hidden = false;
     done.hidden = true;
     $("#msg-err").hidden = true;
-    form.elements.request_type.value = "Booking Request";
-    if (trip) setTrip(trip);
-    if (island && islandName(island)) islandSel.value = island;
-    if (date) $("#f-date").value = date;
-    const t = findTrip(trip);
-    if (t && t.time) $("#f-time").value = t.time;
-    setMode();
+    if (id) { const r = $(`input[name="charter"][value="${id}"]`, form); if (r) r.checked = true; }
+    $("#f-island").value = island && islandName(island) ? island : "";
+    if (date) dateIn.value = date;
+    goTo(1);
     updateSummary();
     if (!dlg.open) dlg.showModal();
     document.documentElement.classList.add("modal-open");
-    $(".bk-main", dlg).scrollTop = 0;
-    const first = tripId() ? (date ? $("#f-name") : $("#f-date")) : $(".tp input", form);
-    first.focus({ preventScroll: true });
+    // Only move focus on desktop so phones don't pop the keyboard open
+    if (matchMedia("(hover: hover)").matches) $(".tp input:checked, .tp input", form).focus({ preventScroll: true });
   }
   const closeBooking = () => dlg.open && dlg.close();
   window.openBooking = openBooking;
@@ -456,58 +464,40 @@ if (dlg && form) {
     openBooking({ trip: a.dataset.pick || q.get("trip"), island: a.dataset.island || q.get("island") });
   });
 
-  setMode();
   updateSummary();
   availabilityReady.then(checkDate);
   if (location.hash === "#book" || params.get("trip")) {
     openBooking({ trip: params.get("trip"), island: params.get("island") });
   }
 
-  function validate() {
-    let ok = true;
-    $$(".field", form).forEach((f) => f.classList.remove("invalid"));
-    $$("input, select, textarea", form).forEach((el) => {
-      if (el.closest("[hidden]") || ["checkbox", "radio"].includes(el.type)) return;
-      if (!el.checkValidity()) { el.closest(".field")?.classList.add("invalid"); ok = false; }
-    });
-    if (!asking() && !tripId()) { $("#trip-pick").classList.add("invalid"); ok = false; }
-    if (!asking() && !checkGuests()) ok = false;
-    if (!asking() && !checkDate()) ok = false;
-    if (!ok) {
-      const bad = $("#trip-pick.invalid input, .invalid input:not([type=radio]), .invalid select, .invalid textarea", form);
-      bad?.focus({ preventScroll: true });
-      bad?.scrollIntoView({ block: "center", behavior: "smooth" });
-    }
-    return ok;
-  }
-
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     $("#msg-err").hidden = true;
-    if (!validate()) return;
+    if (step === 1) {
+      if (validStep(1)) goTo(2);
+      return;
+    }
+    if (!validStep(2)) return;
 
     const d = Object.fromEntries(new FormData(form));
     if (d._honey) return;
-    const booking = d.request_type === "Booking Request";
     const t = findTrip(d.charter);
     const payload = {
-      _subject: `${booking ? "Booking request" : "Question"}: ${t ? t.name : "General"} (${d.name})`,
+      _subject: `Booking request: ${t.name} on ${prettyDate(d.date)} (${d.name})`,
       _template: "table",
       _captcha: "false",
-      "Request": d.request_type,
-      "Trip": t ? t.name : "Not chosen",
+      "Trip": t.name,
+      "Date": prettyDate(d.date) + ` (${d.date})`,
+      "Adults": d.adults,
+      "Kids": d.kids,
+      "Kids' ages": +d.kids ? d.kid_ages : "",
+      "Island": islandName(d.island) || "Captain's choice",
+      name: d.name,
+      phone: d.phone,
+      email: d.email,
+      "Notes": d.notes || "",
     };
-    if (booking) {
-      Object.assign(payload, {
-        "Where to": islandName(d.island) || "Captain's choice",
-        "Date": d.date + (d.backup_date ? `  (backup ${d.backup_date})` : ""),
-        "Start time": d.start_time,
-        "Adults": d.adults,
-        "Kids": d.kids,
-        "Kids' ages": +d.kids ? d.kid_ages : "",
-      });
-    }
-    Object.assign(payload, { name: d.name, phone: d.phone, email: d.email, "Notes": d.notes || "" });
+    if (t.time) payload["Start time"] = t.time;
 
     const btn = $("#submit-btn");
     btn.disabled = true;
@@ -521,6 +511,7 @@ if (dlg && form) {
       const json = await res.json();
       if (String(json.success) !== "true") throw new Error(json.message);
       form.reset();
+      count.adults = 2; count.kids = 0;
       form.hidden = true;
       done.hidden = false;
       $(".bk-close-done", dlg).focus();
@@ -529,7 +520,7 @@ if (dlg && form) {
       $("#msg-err").hidden = false;
     } finally {
       btn.disabled = false;
-      setMode();
+      goTo(form.hidden ? 1 : 2);
       updateSummary();
     }
   });

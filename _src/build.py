@@ -223,6 +223,9 @@ PHONE_ICON = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke
 TEXT_ICON = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>'
 
 
+CHEVRON = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>'
+
+
 def nav(current=None):
     drop = "\n".join(
         f'''          <a href="/islands/{i["id"]}/" class="drop-item{" is-current" if i["id"] == current else ""}" style="--dot:{COLOR[i["color"]]}">
@@ -279,15 +282,15 @@ def nav(current=None):
       </button>
     </div>
     <nav class="menu-links" aria-label="Menu">
-      <a href="/#charters"><span class="num">01</span>Charters</a>
-      <a href="/#islands"><span class="num">02</span>Islands</a>
+      <a href="/#charters">Charters {CHEVRON}</a>
+      <a href="/#forecast">Forecast {CHEVRON}</a>
+      <a href="/#boat">The Boat {CHEVRON}</a>
+      <a href="/#captain">Captain Ron {CHEVRON}</a>
+      <a href="/#faq">FAQ {CHEVRON}</a>
+      <p class="menu-sub">Islands</p>
       <div class="menu-islands">
 {menu_islands}
       </div>
-      <a href="/#boat"><span class="num">03</span>The Boat</a>
-      <a href="/#captain"><span class="num">04</span>Captain Ron</a>
-      <a href="/#faq"><span class="num">05</span>FAQ</a>
-      <a href="/#forecast"><span class="num">06</span>Forecast</a>
     </nav>
     <div class="menu-foot">
       <a href="/#book" class="btn btn-primary btn-lg btn-block">Book Your Trip {ARROW}</a>
@@ -317,7 +320,7 @@ def booking_modal():
         <div class="summary" aria-live="polite">
           <p class="summary-label">Your trip</p>
           <p class="summary-name" id="sum-name">Pick a trip</p>
-          <p class="summary-meta" id="sum-meta">Choose one below to get started.</p>
+          <p class="summary-meta" id="sum-meta">Choose one to get started.</p>
         </div>
         <ul class="bk-promises">
           <li>{CHECK} Free cancellation</li>
@@ -331,101 +334,90 @@ def booking_modal():
       </aside>
 
       <div class="bk-main">
-        <button class="bk-close" type="button" aria-label="Close booking">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
-        </button>
+        <div class="bk-head">
+          <div>
+            <p class="bk-step" id="bk-step">Step 1 of 2</p>
+            <h3 class="bk-heading" id="bk-heading">Pick your trip</h3>
+          </div>
+          <button class="bk-close" type="button" aria-label="Close booking">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <div class="bk-progress" aria-hidden="true"><i id="bk-bar"></i></div>
 
         <form class="book-form" id="book-form" novalidate>
-          <div class="mode" role="radiogroup" aria-label="Request type">
-            <label><input type="radio" name="request_type" value="Booking Request" checked> <span>Book a Trip</span></label>
-            <label><input type="radio" name="request_type" value="Question"> <span>Just Asking</span></label>
-          </div>
+          <input type="hidden" name="island" id="f-island">
+          <input type="hidden" name="adults" id="f-adults" value="2">
+          <input type="hidden" name="kids" id="f-kids" value="0">
 
-          <fieldset class="trip-pick" id="trip-pick">
-            <legend>Choose your trip <span class="opt ask-only">(optional)</span></legend>
-            <div class="trip-options" id="trip-options"></div>
-          </fieldset>
+          <div class="bk-pane" data-pane="1">
+            <fieldset class="trip-pick" id="trip-pick">
+              <legend class="lbl">Trip</legend>
+              <div class="trip-options" id="trip-options"></div>
+            </fieldset>
 
-          <div class="row booking-only">
             <div class="field">
-              <label for="f-island">Where to?</label>
-              <select id="f-island" name="island">
-                <option value="">Captain's choice</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="f-time">Start time</label>
-              <select id="f-time" name="start_time">
-                <option>Morning</option>
-                <option>Midday</option>
-                <option>Afternoon</option>
-                <option>Sunset</option>
-                <option>Flexible</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="row booking-only">
-            <div class="field">
-              <label for="f-date">Preferred date</label>
+              <label class="lbl" for="f-date">Date</label>
               <input type="date" id="f-date" name="date" required>
             </div>
-            <div class="field">
-              <label for="f-alt-date">Backup date <span class="opt">(optional)</span></label>
-              <input type="date" id="f-alt-date" name="backup_date">
+            <p class="date-note" id="date-note" hidden></p>
+
+            <div class="guests" id="guest-row">
+              <p class="lbl">Guests</p>
+              <div class="stepper">
+                <span>Adults</span>
+                <div class="step-ctl">
+                  <button type="button" data-count="adults" data-d="-1" aria-label="One less adult">&minus;</button>
+                  <output id="out-adults">2</output>
+                  <button type="button" data-count="adults" data-d="1" aria-label="One more adult">+</button>
+                </div>
+              </div>
+              <div class="stepper">
+                <span>Kids <small>under 13</small></span>
+                <div class="step-ctl">
+                  <button type="button" data-count="kids" data-d="-1" aria-label="One less kid">&minus;</button>
+                  <output id="out-kids">0</output>
+                  <button type="button" data-count="kids" data-d="1" aria-label="One more kid">+</button>
+                </div>
+              </div>
+              <p class="guest-note" id="guest-note" hidden></p>
+              <div class="field" id="kid-ages" hidden>
+                <label class="lbl" for="f-ages">Kids' ages <small>for life jacket sizes</small></label>
+                <input type="text" id="f-ages" name="kid_ages" placeholder="e.g. 3, 7 and 10">
+              </div>
             </div>
           </div>
-          <p class="date-note booking-only" id="date-note" hidden></p>
 
-          <fieldset class="guests booking-only" id="guest-row">
-            <legend>Who's coming?</legend>
-            <div class="row">
-              <div class="field">
-                <label for="f-adults">Adults</label>
-                <select id="f-adults" name="adults"></select>
-              </div>
-              <div class="field">
-                <label for="f-kids">Kids <span class="opt">(under 13)</span></label>
-                <select id="f-kids" name="kids"></select>
-              </div>
-            </div>
-            <div class="field" id="kid-ages" hidden>
-              <label for="f-ages">Kids' ages <span class="opt">(so the right life jackets are on board)</span></label>
-              <input type="text" id="f-ages" name="kid_ages" placeholder="e.g. 3, 7 and 10">
-            </div>
-            <p class="guest-note" id="guest-note"></p>
-          </fieldset>
-
-          <div class="row">
+          <div class="bk-pane" data-pane="2" hidden>
+            <button type="button" class="bk-recap" id="bk-recap" data-go="1"></button>
             <div class="field">
-              <label for="f-name">Name</label>
+              <label class="lbl" for="f-name">Name</label>
               <input type="text" id="f-name" name="name" autocomplete="name" required>
             </div>
             <div class="field">
-              <label for="f-phone">Phone</label>
-              <input type="tel" id="f-phone" name="phone" autocomplete="tel" required>
+              <label class="lbl" for="f-phone">Phone</label>
+              <input type="tel" id="f-phone" name="phone" autocomplete="tel" inputmode="tel" required>
             </div>
+            <div class="field">
+              <label class="lbl" for="f-email">Email</label>
+              <input type="email" id="f-email" name="email" autocomplete="email" inputmode="email" required>
+            </div>
+            <div class="field">
+              <label class="lbl" for="f-notes">Anything else? <small>optional</small></label>
+              <textarea id="f-notes" name="notes" rows="3" placeholder="Preferred start time, an island you'd love to see, a birthday..."></textarea>
+            </div>
+            <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
           </div>
 
-          <div class="field">
-            <label for="f-email">Email</label>
-            <input type="email" id="f-email" name="email" autocomplete="email" required>
-          </div>
-
-          <div class="field">
-            <label for="f-notes" id="notes-label">Anything we should know?</label>
-            <textarea id="f-notes" name="notes" rows="3" placeholder="A birthday, a proposal, someone who gets seasick..."></textarea>
-          </div>
-
-          <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-
-          <div class="bk-submit">
-            <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit-btn">Get Irie &rarr; Send Request</button>
-            <p class="fine">No payment now. Captain Ron confirms every trip personally.</p>
-          </div>
           <div class="msg msg-err" id="msg-err" hidden>
             Something went wrong sending that. Please call or text <span data-cfg="phone">{PHONE}</span> instead.
           </div>
+
+          <div class="bk-actions">
+            <button type="button" class="btn btn-ghost bk-back" data-go="1" hidden>Back</button>
+            <button type="submit" class="btn btn-primary btn-lg" id="submit-btn">Next &rarr;</button>
+          </div>
+          <p class="bk-help">No payment now &middot; Just a question? <a data-cfg-link="sms" href="sms:{PHONE_DIAL}">Text Ron</a></p>
         </form>
 
         <div class="bk-done" id="bk-done" hidden>
