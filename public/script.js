@@ -179,10 +179,13 @@ function card(c, island) {
       <li>${ICON.people}Up to ${c.guests}</li>
       <li>${ICON.cal}${tripDays(c.id)}</li>
     </ul>
-    <p class="desc">${c.desc}</p>
-    <ul class="perks">${c.perks.map((p) => `<li>${p}</li>`).join("")}</ul>
+    <div class="trip-more" id="more-${c.id}">
+      <p class="desc">${c.desc}</p>
+      <ul class="perks">${c.perks.map((p) => `<li>${p}</li>`).join("")}</ul>
+    </div>
     <div class="trip-foot">
       <div class="price">${c.price ? `<small>From</small>${money(c.price)}` : `<small>Rate</small>Let's talk`}</div>
+      <button type="button" class="trip-toggle" aria-expanded="false" aria-controls="more-${c.id}">More info</button>
       <a href="${href}" class="btn ${isCustom ? "btn-ghost" : "btn-primary"} btn-sm" data-book data-pick="${c.id}"${island ? ` data-island="${island}"` : ""}>${isCustom ? "Plan It" : "Book This Trip"}</a>
     </div>
   </article>`;
@@ -193,6 +196,15 @@ if (grid) {
   const island = grid.dataset.island;
   const trips = island ? CHARTERS.filter((c) => c.islands.includes(island)) : [...CHARTERS, CUSTOM];
   grid.innerHTML = trips.map((c) => card(c, island)).join("");
+  // Phones show compact cards; "More info" opens the description and highlights
+  grid.addEventListener("click", (e) => {
+    const t = e.target.closest(".trip-toggle");
+    if (!t) return;
+    const open = t.getAttribute("aria-expanded") !== "true";
+    t.setAttribute("aria-expanded", String(open));
+    t.textContent = open ? "Less info" : "More info";
+    t.closest(".trip").classList.toggle("is-open", open);
+  });
 }
 
 /* ---------- Booking pop up (two simple steps) ---------- */

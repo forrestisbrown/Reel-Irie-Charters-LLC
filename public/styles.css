@@ -690,3 +690,70 @@ html.modal-open { overflow: hidden; }
   .wx-now { grid-template-columns: 1fr 1fr; }
   .wx-now .now-chip:nth-child(2) { display: none; }
 }
+
+/* ---------- Phones: shorter home page ---------- */
+.trip-toggle { display: none; }
+@media (max-width: 640px) {
+  .section { padding: 56px 0; }
+  .section-head { margin-bottom: 26px; }
+  .sub { font-size: 1rem; }
+
+  /* Trips: compact cards, details on tap */
+  .trip-grid { gap: 12px; }
+  .trip { padding: 18px 16px 14px; }
+  .trip:hover { transform: none; }
+  .ribbon { top: 14px; }
+  .trip h3 { font-size: 1.25rem; margin: 8px 0 6px; }
+  .trip-stats { padding: 0; margin: 0 0 10px; border: 0; gap: 4px 14px; }
+  .trip-more { display: none; }
+  .trip.is-open .trip-more { display: block; }
+  .trip .perks { margin-bottom: 12px; }
+  .trip-toggle {
+    display: inline-flex; align-items: center; gap: 7px; background: none; border: 0; padding: 8px 4px; margin: 0 0 0 auto;
+    color: var(--gold); font: 700 .88rem var(--body); cursor: pointer;
+  }
+  .trip-toggle::after { content: ""; width: 6px; height: 6px; border-right: 2px solid; border-bottom: 2px solid; transform: translateY(-2px) rotate(45deg); transition: transform .2s; }
+  .trip.is-open .trip-toggle::after { transform: translateY(1px) rotate(-135deg); }
+  .trip-foot { padding-top: 12px; gap: 10px; }
+  .trip-stats { margin-bottom: 4px; }
+  .trip.is-open .trip-more { padding: 8px 0 2px; }
+  .price { font-size: 1.4rem; }
+
+  /* Promise strip */
+  .promise { padding: 22px 0; }
+  .promise-grid { gap: 14px; }
+  .promise-icon { width: 38px; height: 38px; }
+  .promise h3 { font-size: .98rem; }
+  .promise p { font-size: .9rem; }
+
+  /* Steps: one compact list */
+  .steps { gap: 0; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .steps li { display: grid; grid-template-columns: 36px 1fr; column-gap: 14px; border: 0; border-radius: 0; border-bottom: 1px solid var(--line); padding: 14px 16px; }
+  .steps li:last-child { border-bottom: 0; }
+  .step-num { grid-row: span 2; width: 34px; height: 34px; font-size: .95rem; margin: 2px 0 0; }
+  .steps h3 { font-size: 1.02rem; margin: 0 0 2px; }
+  .steps p { font-size: .9rem; }
+
+  /* Islands: two column tiles */
+  .island-grid, .island-grid-4 { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .island-link { padding: 16px 14px 14px; }
+  .island-link h3 { font-size: 1rem; margin-bottom: 12px; }
+  .island-link p { display: none; }
+  .island-link .go { font-size: .82rem; }
+
+  /* Boat + captain */
+  .boat { gap: 28px; }
+  .boat-photo { aspect-ratio: 16 / 10; }
+  .checks { gap: 8px; margin-bottom: 18px; }
+  .bring-card { padding: 18px 18px; }
+  .bring-card ul { grid-template-columns: 1fr 1fr; gap: 4px 16px; font-size: .9rem; }
+  .captain { gap: 22px; }
+  .captain-photo { max-width: 170px; border-radius: 18px; }
+
+  /* Footer */
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 26px 16px; padding-top: 38px; }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-brand img { width: 170px; }
+  .footer ul { gap: 4px; }
+  .book-cta { padding: 70px 0; }
+}
