@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Reel Irie | St. Pete &amp; Clearwater Fishing and Island Charters</title>
+  <meta name="description" content="Private fishing and island hopping charters out of St. Pete and Clearwater, Florida. Inshore, nearshore, sandbar and sunset trips. Book your trip with Team Reel Irie.">
+  <meta name="theme-color" content="#050505">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta property="og:title" content="Team Reel Irie Charters">
+  <meta property="og:description" content="Private fishing and island charters out of St. Pete and Clearwater, FL.">
+  <meta property="og:image" content="images/og-image.jpg">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Team Reel Irie",
+    "description": "Private fishing and island charters out of St. Pete and Clearwater, Florida.",
+    "image": "images/og-image.jpg",
+    "areaServed": ["St. Petersburg, FL", "Clearwater, FL", "Pinellas County, FL"],
+    "address": { "@type": "PostalAddress", "addressLocality": "St. Petersburg", "addressRegion": "FL", "addressCountry": "US" }
+  }
+  </script>
+</head>
+<body>
+
+  <a class="skip" href="#book">Skip to booking</a>
+
+  <!-- ============ HEADER ============ -->
+  <header class="nav" id="top">
+    <div class="wrap nav-inner">
+      <a href="#top" class="nav-logo" aria-label="Team Reel Irie home">
+        <img src="images/wordmark.png" alt="Team Reel Irie" width="1200" height="367">
+      </a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="#charters">Charters</a>
+        <a href="#islands">Islands</a>
+        <a href="#captain">The Captain</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a href="#book" class="btn btn-primary btn-sm nav-cta">Book Now</a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu" hidden>
+      <a href="#charters">Charters</a>
+      <a href="#islands">Islands</a>
+      <a href="#captain">The Captain</a>
+      <a href="#faq">FAQ</a>
+      <a href="#book" class="btn btn-primary">Book Now</a>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="dot"></span> St. Pete / Clearwater, Florida</p>
+          <h1>Fish hard.<br><span class="rasta-text">Live irie.</span></h1>
+          <p class="lead">Private fishing and island charters on the Gulf and Tampa Bay. Bend a rod, hop a sandbar, catch a sunset. One crew, one boat, all yours.</p>
+          <div class="hero-ctas">
+            <a href="#book" class="btn btn-primary btn-lg">Get Irie &rarr; Book a Trip</a>
+            <a href="#charters" class="btn btn-ghost btn-lg">See the Charters</a>
+          </div>
+          <ul class="hero-points">
+            <li>Private trips only</li>
+            <li>Rods, tackle &amp; bait on board</li>
+            <li>Kids &amp; first timers welcome</li>
+          </ul>
+        </div>
+        <div class="hero-art">
+          <img src="images/fish.webp" alt="" width="700" height="580" class="hero-fish">
+        </div>
+      </div>
+      <div class="wave" aria-hidden="true">
+        <svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0 40 C 240 80 480 0 720 40 S 1200 80 1440 40 V80 H0Z"/></svg>
+      </div>
+    </section>
+
+    <div class="rasta-bar" aria-hidden="true"></div>
+
+    <!-- ============ CHARTERS MENU ============ -->
+    <section class="section" id="charters">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">The Menu</p>
+          <h2>Pick Your Trip</h2>
+          <p class="sub">Every charter is private. Rates are for the whole boat, not per person.</p>
+        </div>
+
+        <div class="filters" role="tablist" aria-label="Filter charters">
+          <button class="chip is-active" data-filter="all" role="tab" aria-selected="true">All Trips</button>
+          <button class="chip" data-filter="fishing" role="tab" aria-selected="false">Fishing</button>
+          <button class="chip" data-filter="island" role="tab" aria-selected="false">Island &amp; Cruise</button>
+        </div>
+
+        <div class="charter-grid" id="charter-grid">
+          <!-- cards rendered from CHARTERS in script.js -->
+        </div>
+
+        <p class="fine center">Don't see what you want? <a href="#book" data-pick="custom">Ask about a custom trip</a> and we'll build it.</p>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="section section-alt">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Easy Booking</p>
+          <h2>Three Steps to the Water</h2>
+        </div>
+        <ol class="steps">
+          <li>
+            <span class="step-num">1</span>
+            <h3>Pick a trip</h3>
+            <p>Choose from the menu above or tell us what you're dreaming up.</p>
+          </li>
+          <li>
+            <span class="step-num">2</span>
+            <h3>Pick your day</h3>
+            <p>Send your date, group size and a preferred start time. Takes a minute.</p>
+          </li>
+          <li>
+            <span class="step-num">3</span>
+            <h3>Captain confirms</h3>
+            <p>We check weather, tides and the calendar, then reach out to lock it in.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ ISLANDS ============ -->
+    <section class="section" id="islands">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Island Time</p>
+          <h2>Where We Go</h2>
+          <p class="sub">Some of the best water in Florida is right out our back door.</p>
+        </div>
+        <div class="island-grid">
+          <article class="island">
+            <h3>Shell Key</h3>
+            <p>Undeveloped barrier island with clear shallows, shelling and dolphins cruising the flats.</p>
+          </article>
+          <article class="island">
+            <h3>Egmont Key</h3>
+            <p>Old fort ruins, a working lighthouse and gopher tortoises at the mouth of Tampa Bay.</p>
+          </article>
+          <article class="island">
+            <h3>Caladesi Island</h3>
+            <p>Regularly ranked among the top beaches in America. Soft sand, no crowds.</p>
+          </article>
+          <article class="island">
+            <h3>Pass-a-Grille</h3>
+            <p>Grass flats and passes loaded with snook, reds and trout. A local favorite.</p>
+          </article>
+          <article class="island">
+            <h3>Fort De Soto</h3>
+            <p>Five interconnected keys with sandbars made for anchoring up and swimming.</p>
+          </article>
+          <article class="island">
+            <h3>The Gulf Reefs</h3>
+            <p>Nearshore wrecks and ledges for grouper, snapper, kingfish and Spanish mackerel.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ INCLUDED ============ -->
+    <section class="section section-alt">
+      <div class="wrap split">
+        <div>
+          <p class="eyebrow">What's Included</p>
+          <h2>Just Show Up</h2>
+          <p class="sub left">We handle the gear. You bring the good vibes.</p>
+          <ul class="checks">
+            <li>Rods, reels, tackle and live or fresh bait</li>
+            <li>Florida fishing licenses for everyone on board</li>
+            <li>Ice and cooler space for your catch</li>
+            <li>Fish cleaning at the dock</li>
+            <li>Bluetooth sound for the island vibes</li>
+          </ul>
+        </div>
+        <div class="bring-card">
+          <h3>Bring Along</h3>
+          <ul>
+            <li>Sunscreen and sunglasses</li>
+            <li>Hat and a light layer</li>
+            <li>Food and drinks you like</li>
+            <li>Towel and swimsuit for island trips</li>
+            <li>Camera for the big one</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CAPTAIN ============ -->
+    <section class="section" id="captain">
+      <div class="wrap captain">
+        <div class="captain-photo">
+          <img src="images/logo-full.webp" alt="Team Reel Irie logo" width="1254" height="1254" loading="lazy">
+        </div>
+        <div>
+          <p class="eyebrow">Meet the Crew</p>
+          <h2>Your Captain</h2>
+          <p class="captain-name" data-cfg="captainName">Captain</p>
+          <p>Born and raised on this water. Team Reel Irie started with a simple idea: the best day on a boat is part fishing, part island time and all good company. Whether it's your kid's first snook or a bachelor party on the sandbar, we run every trip like we're taking out family.</p>
+          <p>We know where the fish are biting this week, which sandbars are calm, and how to time it so you're watching the sunset instead of fighting the crowd.</p>
+          <a href="#book" class="btn btn-primary">Come Fish With Us</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="section section-alt" id="faq">
+      <div class="wrap narrow">
+        <div class="section-head">
+          <p class="eyebrow">Good to Know</p>
+          <h2>Questions</h2>
+        </div>
+        <div class="faq">
+          <details>
+            <summary>Where do we meet?</summary>
+            <p>We'll send the exact dock location and parking details when your trip is confirmed. We run out of the St. Pete and Clearwater area.</p>
+          </details>
+          <details>
+            <summary>What if the weather turns bad?</summary>
+            <p>Safety comes first. If the captain calls the trip for weather, you can reschedule or get a full refund of your deposit.</p>
+          </details>
+          <details>
+            <summary>Do we need fishing licenses?</summary>
+            <p>No. Everyone fishing on a licensed charter is covered.</p>
+          </details>
+          <details>
+            <summary>How many people can come?</summary>
+            <p>Each trip lists its max group size. Kids count toward the total. Ask if you have a bigger crew and we'll figure it out.</p>
+          </details>
+          <details>
+            <summary>Can we keep our fish?</summary>
+            <p>Yes, as long as they're in season and within Florida size and bag limits. We'll clean them at the dock for you.</p>
+          </details>
+          <details>
+            <summary>Can we bring food and drinks?</summary>
+            <p>Absolutely. Bring whatever you like. Please skip glass bottles.</p>
+          </details>
+          <details>
+            <summary>Is there a deposit?</summary>
+            <p>A deposit holds your date once the captain confirms. The balance is due on the day of your trip. Tips for the crew are always appreciated.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BOOKING ============ -->
+    <section class="section book" id="book">
+      <div class="wrap book-grid">
+        <div class="book-intro">
+          <p class="eyebrow">Reel It In</p>
+          <h2>Book Your Trip</h2>
+          <p class="sub left">Send a request and the captain will get back to you to confirm the date, time and dock. Nothing is charged until your trip is confirmed.</p>
+
+          <div class="summary" id="summary" aria-live="polite">
+            <p class="summary-label">Your trip</p>
+            <p class="summary-name" id="sum-name">Pick a charter</p>
+            <p class="summary-meta" id="sum-meta">Choose a trip from the menu or the form.</p>
+          </div>
+
+          <div class="direct">
+            <p>Rather talk it out?</p>
+            <a class="direct-link" data-cfg-link="tel" href="#">
+              <span class="direct-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
+              </span>
+              <span><strong>Call or text</strong><br><span data-cfg="phone">(727) 000-0000</span></span>
+            </a>
+            <a class="direct-link" data-cfg-link="mailto" href="#">
+              <span class="direct-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+              </span>
+              <span><strong>Email</strong><br><span data-cfg="email">captain@example.com</span></span>
+            </a>
+          </div>
+        </div>
+
+        <form class="book-form" id="book-form" novalidate>
+          <div class="mode" role="radiogroup" aria-label="Request type">
+            <label><input type="radio" name="request_type" value="Booking Request" checked> <span>Book a Trip</span></label>
+            <label><input type="radio" name="request_type" value="Question"> <span>Just Asking</span></label>
+          </div>
+
+          <div class="field">
+            <label for="f-charter">Charter</label>
+            <select id="f-charter" name="charter" required>
+              <option value="">Choose a trip...</option>
+            </select>
+          </div>
+
+          <div class="row booking-only">
+            <div class="field">
+              <label for="f-date">Preferred date</label>
+              <input type="date" id="f-date" name="date" required>
+            </div>
+            <div class="field">
+              <label for="f-alt-date">Backup date <span class="opt">(optional)</span></label>
+              <input type="date" id="f-alt-date" name="backup_date">
+            </div>
+          </div>
+
+          <div class="row booking-only">
+            <div class="field">
+              <label for="f-time">Start time</label>
+              <select id="f-time" name="start_time">
+                <option>Morning</option>
+                <option>Midday</option>
+                <option>Afternoon</option>
+                <option>Sunset</option>
+                <option>Flexible</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-guests">Guests</label>
+              <select id="f-guests" name="guests"></select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="f-name">Name</label>
+              <input type="text" id="f-name" name="name" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="f-phone">Phone</label>
+              <input type="tel" id="f-phone" name="phone" autocomplete="tel" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="f-email">Email</label>
+            <input type="email" id="f-email" name="email" autocomplete="email" required>
+          </div>
+
+          <div class="field">
+            <label for="f-notes" id="notes-label">Anything we should know?</label>
+            <textarea id="f-notes" name="notes" rows="4" placeholder="Kids on board, a birthday, a fish you're after..."></textarea>
+          </div>
+
+          <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit-btn">Reel It In &rarr; Send Request</button>
+          <p class="fine">No payment now. The captain confirms every trip personally.</p>
+
+          <div class="msg msg-ok" id="msg-ok" hidden>
+            <strong>Got it. You're on the line!</strong> The captain will reach out soon to confirm your trip.
+          </div>
+          <div class="msg msg-err" id="msg-err" hidden>
+            Something went wrong sending that. Please call or text us instead.
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="rasta-bar" aria-hidden="true"></div>
+    <div class="wrap footer-inner">
+      <img src="images/wordmark.png" alt="Team Reel Irie" class="footer-logo" width="1200" height="367" loading="lazy">
+      <p>Private fishing &amp; island charters<br>St. Pete / Clearwater, Florida</p>
+      <p class="footer-contact">
+        <a data-cfg-link="tel" href="#"><span data-cfg="phone">(727) 000-0000</span></a>
+        <span aria-hidden="true">&middot;</span>
+        <a data-cfg-link="mailto" href="#"><span data-cfg="email">captain@example.com</span></a>
+      </p>
+      <p class="copy">&copy; <span id="year">2026</span> Team Reel Irie. One love.</p>
+    </div>
+  </footer>
+
+  <!-- Sticky mobile bar -->
+  <div class="mobile-bar">
+    <a data-cfg-link="tel" href="#" class="btn btn-ghost">Call</a>
+    <a href="#book" class="btn btn-primary">Book Now</a>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

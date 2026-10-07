@@ -1,0 +1,11 @@
+{
+  "name": "team-reel-irie",
+  "compatibility_date": "2026-09-01",
+  // Add the custom domain here once it's bought, like SolarShield:
+  // "routes": [{ "pattern": "teamreelirie.com", "custom_domain": true }],
+  "assets": {
+    "directory": "./",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}
