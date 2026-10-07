@@ -21,7 +21,7 @@ Hosted on Cloudflare: a static site plus a small Worker that stores bookings and
 Everything in `public/` is the live website. After editing anything in `_src/`, rebuild the pages:
 
 ```
-python _src/build.py        # or: npm run pages
+python _src/build.py        # or: npm run build
 ```
 
 ## Run it locally
