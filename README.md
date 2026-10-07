@@ -1,52 +1,70 @@
 # Reel Irie Charters
 
-Website for Reel Irie Charters LLC: private island hopping and sunset boat charters with Captain Ron Brown, St. Pete / Clearwater, FL.
+Website and booking system for Reel Irie Charters LLC: private island hopping and sunset boat charters with Captain Ron Brown, St. Pete / Clearwater, FL.
 
-Static site hosted on Cloudflare (see `wrangler.jsonc`). No framework, no install.
+Hosted on Cloudflare: a static site plus a small Worker that stores bookings and runs the **Captain's Deck** (`/admin`).
 
 ## Where things live
 
 | What | Where |
 | --- | --- |
-| Trips, prices, phone, form email | top of `script.js` (`CONFIG`, `CHARTERS`) |
+| Trips, prices, phone, weekly schedule | `public/config.js` |
 | Home page content | `_src/home.html` |
-| Booking pop up | `booking_modal()` in `_src/build.py` |
-| Island pages, shared header/menu/footer | `_src/build.py` |
-| Styles | `styles.css` |
+| Island pages, shared header/menu/footer, booking pop up | `_src/build.py` |
+| Styles / site behavior | `public/styles.css`, `public/script.js` |
+| Captain's Deck (admin app) | `public/admin/` |
+| Booking API, login check, availability | `worker/index.js` |
+| Booking email Ron receives | `worker/email.js` |
+| Database tables | `worker/schema.sql` |
 | Logo and image generation | `_src/make_logos.py` |
 
-After editing anything in `_src/`, rebuild the pages:
+Everything in `public/` is the live website. After editing anything in `_src/`, rebuild the pages:
 
 ```
 python _src/build.py
 ```
 
-`index.html`, `404.html` and `islands/*/index.html` are generated, so edit their sources in `_src/` rather than the output.
+## Run it locally
 
-## Schedule and availability
+```
+npm install
+npm run db:local        # first time only: creates the local database
+npm run dev             # http://localhost:8787  (admin: /admin)
+```
 
-The weekly pattern is `SCHEDULE` at the top of `script.js` (right now: weekdays are Sunset Irie Cruise only, weekends run every trip). The trip cards, the forecast and the booking form all read from it.
+`.dev.vars` (not committed) holds local only settings. `DEV_ADMIN_EMAIL` lets you open `/admin` on your own machine without the Cloudflare login.
 
-For specific dates (on call days, booked days, days off), Ron uses a Google Sheet from his phone. A ready made template is built by `python _src/make_availability_sheet.py` (saves `Reel Irie Availability.xlsx` to Downloads), with a status dropdown, color coding and a How to use tab.
+## How booking works
 
-1. Upload the .xlsx to Google Drive, open it with Google Sheets, then File > Save as Google Sheets
-2. File > Share > Publish to web > pick the **Availability** tab > **Comma separated values (.csv)** > Publish
-3. Paste that link into `CONFIG.availabilitySheet` in `script.js` (one time)
+1. A customer books in the pop up (two steps: trip/date/guests, then contact info).
+2. `POST /api/book` saves it to the database and emails Captain Ron.
+3. Ron opens the Captain's Deck, taps **Confirm** or **Decline**, and can text the customer a ready made message.
+4. Confirming can mark the day **booked**, which blocks it on the website forecast and booking form.
+5. In the **Calendar** tab Ron taps any day to set it: Normal, All trips, Sunset only, Booked, On call or Off.
 
-Statuses: `off`, `on call`, `booked` (blocks the day), `sunset only`, `open` (every trip). Past dates are ignored.
+The normal week is `SCHEDULE` in `public/config.js` (weekdays: Sunset Irie Cruise only, weekends: every trip).
 
-After that, edits to the sheet show up on the site within a minute, with no code changes. `off`, `booked` and `on call` block the date in the form and grey it out in the forecast.
+## Going live checklist
+
+1. **Connect the domain** to this Cloudflare account, then uncomment `routes` in `wrangler.jsonc`.
+2. **Create the database** (once):
+   ```
+   npx wrangler d1 create reel-irie
+   ```
+   Paste the `database_id` it prints into `wrangler.jsonc`, then run `npm run db:remote`.
+3. **Lock down the admin** with Cloudflare Access (free):
+   - Zero Trust → Access → Applications → Add → Self hosted
+   - Domain: `reeliriecharters.com`, paths `admin` and `api/admin`
+   - Policy: Allow → Emails → Ron's email (and yours)
+   - Login method: One time PIN (a code is emailed), session duration 1 month
+   - Copy the team domain (`<team>.cloudflareaccess.com`) and the app's **AUD tag** into `ACCESS_TEAM_DOMAIN` and `ACCESS_AUD` in `wrangler.jsonc`, and set `ADMIN_EMAILS`.
+4. **Branded booking emails** (optional, replaces FormSubmit): turn on Email Routing for the domain, verify Ron's email as a destination, then set `NOTIFY_FROM`, `NOTIFY_TO` and uncomment `send_email` in `wrangler.jsonc`.
+5. Push to GitHub. Cloudflare builds and deploys from `main`.
 
 ## Forecast
 
-The Boat Day Forecast uses [Open-Meteo](https://open-meteo.com) (free, no key): weather, wind, rain chance and sunset from the forecast API, and Gulf wave height and water temperature from the marine API. Ratings (Great / Good / Iffy / Rough) are set in `rate()` in `script.js`.
+The Boat Day Forecast uses [Open-Meteo](https://open-meteo.com) (free, no key) for weather, wind, rain chance, sunset, Gulf waves and water temperature. Ratings (Great / Good / Iffy / Rough) are set in `rate()` in `public/script.js`.
 
-## Booking form
+## Backups
 
-Requests are sent with [FormSubmit](https://formsubmit.co) to `CONFIG.formEmail`. The first request sends an activation email to that address. Click it once and requests start arriving. FormSubmit then offers a random alias you can swap in for the email address so it isn't visible in the page source.
-
-## Preview locally
-
-```
-python -m http.server 8931
-```
+If the API isn't reachable (for example, a plain static preview), the booking form emails requests straight through FormSubmit to `CONFIG.formEmail`. An optional Google Sheet can also feed availability (`CONFIG.availabilitySheet`, template from `python _src/make_availability_sheet.py`); the Captain's Deck calendar takes priority when it's live.
