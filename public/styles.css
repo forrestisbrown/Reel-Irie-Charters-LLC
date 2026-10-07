@@ -757,3 +757,40 @@ html.modal-open { overflow: hidden; }
   .footer ul { gap: 4px; }
   .book-cta { padding: 70px 0; }
 }
+
+/* ---------- Phones: trips as a two column grid ---------- */
+@media (max-width: 640px) {
+  .trip-grid { grid-template-columns: 1fr 1fr; gap: 10px; align-items: stretch; grid-auto-flow: row dense; }
+  .trip { padding: 16px 12px 12px; border-radius: 16px; }
+  .trip::before { height: 3px; }
+  .ribbon, .when {
+    position: static; display: block; clip-path: none; align-self: flex-start;
+    font-size: .58rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; line-height: 1;
+    padding: 0; background: none; color: var(--gold); margin: 0 0 8px;
+  }
+  .when svg { display: none; }
+  .trip:nth-child(3n+2) .ribbon { background: none; color: #4be06c; }
+  .trip:nth-child(3n) .ribbon { background: none; color: #ff8a84; }
+  .trip:has(.ribbon) .when { display: none; }
+  .trip h3 { font-size: 1.02rem; line-height: 1.2; margin: 0 0 8px; padding: 0; }
+  .trip-stats { flex-direction: column; gap: 3px; margin: 0 0 10px; }
+  .trip-stats li { font-size: .78rem; gap: 6px; }
+  .trip-stats svg { width: 13px; height: 13px; }
+  .trip-foot { margin-top: auto; flex-wrap: wrap; gap: 8px; padding-top: 10px; }
+  .trip-foot .price { order: 1; flex: 1 1 100%; font-size: 1.25rem; display: flex; align-items: baseline; gap: 6px; }
+  .trip-foot .price small { order: 2; margin: 0; font-size: .62rem; }
+  .trip-foot .btn { order: 2; flex: 1 1 100%; padding: 9px 10px; font-size: .86rem; }
+  .trip-foot .trip-toggle { order: 3; flex: 1 1 100%; justify-content: center; margin: 0; padding: 4px 0 2px; font-size: .8rem; }
+  .trip.is-open { grid-column: 1 / -1; }
+  .trip.is-open h3 { font-size: 1.2rem; }
+  .trip.is-open .trip-stats { flex-direction: row; flex-wrap: wrap; gap: 4px 14px; }
+  .trip .desc { font-size: .92rem; }
+  .perks li { font-size: .84rem; }
+
+  /* Promise strip: three across */
+  .promise-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .promise-item { flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+  .promise-icon { width: 36px; height: 36px; }
+  .promise h3 { font-size: .8rem; line-height: 1.25; margin: 0; }
+  .promise p { display: none; }
+}
