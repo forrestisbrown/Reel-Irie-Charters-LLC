@@ -26,7 +26,7 @@ export function bookingEmail(b, origin) {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:16px;overflow:hidden">
   <tr><td style="height:6px;background:linear-gradient(90deg,#19c83c 0 33%,#ffd614 33% 66%,#ec241c 66%);background-color:#ffd614"></td></tr>
   <tr><td style="background:#050505;padding:22px 24px" align="center">
-    <img src="${origin}/images/wordmark.png" width="280" alt="Reel Irie Charters" style="display:block;max-width:100%;height:auto">
+    <img src="${origin}/images/logo.png" width="150" alt="Reel Irie Charters" style="display:block;width:150px;max-width:100%;height:auto">
   </td></tr>
   <tr><td style="padding:26px 24px 8px">
     <p style="margin:0 0 4px;color:#b8860b;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase">New booking request</p>

@@ -794,3 +794,29 @@ html.modal-open { overflow: hidden; }
   .promise h3 { font-size: .8rem; line-height: 1.25; margin: 0; }
   .promise p { display: none; }
 }
+
+/* ---------- Official logo (badge) ---------- */
+.nav-badge { height: 60px; width: auto; filter: drop-shadow(0 4px 10px rgba(0,0,0,.45)); }
+.menu-logo { height: 64px; }
+.footer-brand img { width: 150px; }
+.captain-photo { border: 0; border-radius: 0; box-shadow: none; overflow: visible; background: radial-gradient(closest-side, rgba(255,150,40,.22), transparent 75%); }
+.captain-photo img { filter: drop-shadow(0 18px 34px rgba(0,0,0,.55)); }
+.ihero-fish { transform: rotate(-4deg); opacity: .12; }
+.book-cta-fish { width: 380px; transform: rotate(-6deg); }
+.lost-fish { max-width: 220px; }
+@media (max-width: 960px) { .nav-badge { height: 52px; } }
+@media (max-width: 640px) { .nav-badge { height: 48px; } .captain-photo { max-width: 200px; } }
+/* Hanging header badge: big at the top, tucks in on scroll */
+.nav-logo { align-self: flex-start; margin-top: 6px; position: relative; z-index: 2; }
+.nav-badge { height: 98px; transition: height .3s var(--ease), margin .3s var(--ease); }
+.nav.is-scrolled .nav-logo { margin-top: 6px; }
+.nav.is-scrolled .nav-badge { height: 62px; }
+.ihero-fish { opacity: .08; }
+@media (max-width: 960px) {
+  .nav-badge { height: 74px; }
+  .nav.is-scrolled .nav-badge { height: 54px; }
+}
+@media (max-width: 640px) {
+  .nav-badge { height: 66px; }
+  .nav.is-scrolled .nav-badge { height: 52px; }
+}

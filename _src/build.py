@@ -244,8 +244,7 @@ def nav(current=None):
     <div class="nav-stripe" aria-hidden="true"></div>
     <div class="wrap nav-inner">
       <a href="/" class="nav-logo" aria-label="{BUSINESS} home">
-        <img src="/images/wordmark.png" alt="{BUSINESS}" class="logo-wide" width="1400" height="118">
-        <img src="/images/wordmark-stacked.png" alt="{BUSINESS}" class="logo-stack" width="900" height="243">
+        <img src="/images/logo.webp" alt="{BUSINESS}" class="nav-badge" width="520" height="507">
       </a>
       <nav class="nav-links" aria-label="Main">
         <a href="/#charters">Charters</a>
@@ -275,9 +274,8 @@ def nav(current=None):
 
   <div class="menu" id="menu" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Menu">
     <div class="menu-stripe" aria-hidden="true"></div>
-    <img src="/images/fish.webp" alt="" class="menu-fish" aria-hidden="true">
     <div class="menu-top">
-      <img src="/images/wordmark-stacked.png" alt="{BUSINESS}" class="menu-logo" width="900" height="243">
+      <img src="/images/logo.webp" alt="{BUSINESS}" class="menu-logo" width="520" height="507">
       <button class="menu-close" type="button" aria-label="Close menu">
         <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
       </button>
@@ -315,7 +313,7 @@ def booking_modal():
     <div class="bk-shell">
       <aside class="bk-side">
         <div class="bk-stripe" aria-hidden="true"></div>
-        <img src="/images/fish.webp" alt="" class="bk-fish" aria-hidden="true">
+        <img src="/images/logo-lg.webp" alt="" class="bk-fish" aria-hidden="true">
         <p class="eyebrow">Island Time Awaits</p>
         <h2 id="bk-title">Book Your Trip</h2>
         <div class="summary" aria-live="polite">
@@ -422,7 +420,7 @@ def booking_modal():
         </form>
 
         <div class="bk-done" id="bk-done" hidden>
-          <img src="/images/fish.webp" alt="" width="180" height="150">
+          <img src="/images/logo.webp" alt="" width="520" height="507">
           <h3>You're on the line!</h3>
           <p>Captain Ron will reach out soon to confirm your date, time and dock. Keep an eye on your phone.</p>
           <button type="button" class="btn btn-primary bk-close-done">Back to the Site</button>
@@ -440,7 +438,7 @@ def footer():
     <div class="rasta-bar" aria-hidden="true"></div>
     <div class="wrap footer-grid">
       <div class="footer-brand">
-        <img src="/images/wordmark-stacked.png" alt="{BUSINESS}" width="900" height="243" loading="lazy">
+        <img src="/images/logo.webp" alt="{BUSINESS}" width="520" height="507" loading="lazy">
         <p>Private island hopping and sunset charters out of St. Pete / Clearwater, Florida.</p>
       </div>
       <div>
@@ -547,7 +545,7 @@ def island_page(i):
   <main class="island-page" style="--accent:{c}">
     <section class="ihero">
       <div class="ihero-bg" aria-hidden="true"></div>
-      <img src="/images/fish.webp" alt="" class="ihero-fish" aria-hidden="true">
+      <img src="/images/logo-lg.webp" alt="" class="ihero-fish" aria-hidden="true">
       <div class="wrap ihero-inner">
         <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/#islands">Islands</a><span>/</span><span aria-current="page">{i["name"]}</span></nav>
         <h1>{i["name"]}</h1>
@@ -682,7 +680,7 @@ def main():
         + f"""
   <main class="section center lost">
     <div class="wrap narrow">
-      <img src="/images/fish.webp" alt="" width="260" height="216" class="lost-fish">
+      <img src="/images/logo.webp" alt="Reel Irie Charters" width="520" height="507" class="lost-fish">
       <h1>This one <span class="rasta-text">got away.</span></h1>
       <p class="sub">That page isn't here. Let's get you back on the water.</p>
       <p class="hero-ctas" style="justify-content:center"><a href="/" class="btn btn-primary btn-lg">Back to the Dock</a></p>

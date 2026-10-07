@@ -306,7 +306,7 @@ function closeDetail(fromHistory) {
     if (!fromHistory && history.state && history.state.detail) history.back();
   }
   state.sel = null;
-  detail.innerHTML = `<div class="detail-empty"><img src="/images/fish.webp" alt="" width="120" height="100"><p>Select a request, trip or customer to see the details.</p></div>`;
+  detail.innerHTML = `<div class="detail-empty"><img src="/images/logo.webp" alt="" width="520" height="507"><p>Select a request, trip or customer to see the details.</p></div>`;
   renderInbox(); renderTrips(); renderCustomers();
 }
 addEventListener("popstate", () => { if (detail.classList.contains("open")) closeDetail(true); });
