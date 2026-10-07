@@ -3,19 +3,164 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lost at Sea | Team Reel Irie</title>
+  <title>Lost at Sea | Reel Irie Charters</title>
+  <meta name="description" content="That page isn&#x27;t here.">
+  <meta name="theme-color" content="#050505">
   <link rel="icon" type="image/png" href="/favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta property="og:title" content="Lost at Sea | Reel Irie Charters">
+  <meta property="og:description" content="That page isn&#x27;t here.">
+  <meta property="og:image" content="/images/og-image.jpg">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bevan&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <main class="section center" style="min-height:100vh;display:grid;place-items:center">
+  <a class="skip" href="/#book">Skip to booking</a>
+
+  <header class="nav">
+    <div class="nav-stripe" aria-hidden="true"></div>
+    <div class="wrap nav-inner">
+      <a href="/" class="nav-logo" aria-label="Reel Irie Charters home">
+        <img src="/images/wordmark.png" alt="Reel Irie Charters" class="logo-wide" width="1400" height="118">
+        <img src="/images/wordmark-stacked.png" alt="Reel Irie Charters" class="logo-stack" width="900" height="243">
+      </a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="/#charters">Charters</a>
+        <div class="drop">
+          <button type="button" aria-expanded="false" aria-haspopup="true">Islands
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="drop-panel">
+          <a href="/islands/shell-key/" class="drop-item" style="--dot:#19c83c">
+            <span class="drop-name">Shell Key</span>
+            <span class="drop-blurb">Undeveloped barrier island with clear shallows, shelling and dolphins on the flats.</span>
+          </a>
+          <a href="/islands/egmont-key/" class="drop-item" style="--dot:#ffd614">
+            <span class="drop-name">Egmont Key</span>
+            <span class="drop-blurb">Fort ruins, a working lighthouse and gopher tortoises at the mouth of Tampa Bay.</span>
+          </a>
+          <a href="/islands/caladesi-island/" class="drop-item" style="--dot:#ec241c">
+            <span class="drop-name">Caladesi Island</span>
+            <span class="drop-blurb">Named America's best beach. Soft white sand, clear water and no crowds.</span>
+          </a>
+          <a href="/islands/pass-a-grille/" class="drop-item" style="--dot:#19c83c">
+            <span class="drop-name">Pass-a-Grille</span>
+            <span class="drop-blurb">Historic beach town at the tip of St. Pete Beach with sunsets locals swear by.</span>
+          </a>
+          <a href="/islands/fort-de-soto/" class="drop-item" style="--dot:#ffd614">
+            <span class="drop-name">Fort De Soto</span>
+            <span class="drop-blurb">Five connected keys with sandbars made for anchoring up and swimming.</span>
+          </a>
+            <a href="/#islands" class="drop-all">See all islands <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div>
+        </div>
+        <a href="/#boat">The Boat</a>
+        <a href="/#captain">Captain Ron</a>
+        <a href="/#faq">FAQ</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="nav-phone" data-cfg-link="tel" href="tel:+17273861281"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg><span data-cfg="phone">(727) 386-1281</span></a>
+        <a href="/#book" class="btn btn-primary btn-sm">Book Now</a>
+      </div>
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+        <span class="nav-toggle-label">Menu</span>
+        <span class="nav-toggle-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="menu" id="menu" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="menu-stripe" aria-hidden="true"></div>
+    <img src="/images/fish.webp" alt="" class="menu-fish" aria-hidden="true">
+    <div class="menu-top">
+      <img src="/images/wordmark-stacked.png" alt="Reel Irie Charters" class="menu-logo" width="900" height="243">
+      <button class="menu-close" type="button" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <nav class="menu-links" aria-label="Menu">
+      <a href="/#charters"><span class="num">01</span>Charters</a>
+      <a href="/#islands"><span class="num">02</span>Islands</a>
+      <div class="menu-islands">
+          <a href="/islands/shell-key/" style="--dot:#19c83c">Shell Key</a>
+          <a href="/islands/egmont-key/" style="--dot:#ffd614">Egmont Key</a>
+          <a href="/islands/caladesi-island/" style="--dot:#ec241c">Caladesi Island</a>
+          <a href="/islands/pass-a-grille/" style="--dot:#19c83c">Pass-a-Grille</a>
+          <a href="/islands/fort-de-soto/" style="--dot:#ffd614">Fort De Soto</a>
+      </div>
+      <a href="/#boat"><span class="num">03</span>The Boat</a>
+      <a href="/#captain"><span class="num">04</span>Captain Ron</a>
+      <a href="/#faq"><span class="num">05</span>FAQ</a>
+    </nav>
+    <div class="menu-foot">
+      <a href="/#book" class="btn btn-primary btn-lg btn-block">Book Your Trip <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <div class="menu-contact">
+        <a data-cfg-link="tel" href="tel:+17273861281" class="btn btn-ghost"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg> Call</a>
+        <a data-cfg-link="sms" href="sms:+17273861281" class="btn btn-ghost"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Text</a>
+      </div>
+      <p class="menu-note">Free cancellation &middot; Weather reschedules on us</p>
+    </div>
+  </div>
+
+  <main class="section center lost">
     <div class="wrap narrow">
-      <img src="/images/fish.webp" alt="" width="220" height="220" style="margin:0 auto 20px;max-width:220px">
-      <h1 style="font-size:clamp(2.4rem,7vw,4rem)">This one <span class="rasta-text">got away.</span></h1>
+      <img src="/images/fish.webp" alt="" width="260" height="216" class="lost-fish">
+      <h1>This one <span class="rasta-text">got away.</span></h1>
       <p class="sub">That page isn't here. Let's get you back on the water.</p>
-      <p style="margin-top:28px"><a href="/" class="btn btn-primary btn-lg">Back to the Dock</a></p>
+      <p class="hero-ctas" style="justify-content:center"><a href="/" class="btn btn-primary btn-lg">Back to the Dock</a></p>
     </div>
   </main>
+
+  <footer class="footer">
+    <div class="rasta-bar" aria-hidden="true"></div>
+    <div class="wrap footer-grid">
+      <div class="footer-brand">
+        <img src="/images/wordmark-stacked.png" alt="Reel Irie Charters" width="900" height="243" loading="lazy">
+        <p>Private island hopping and sunset charters out of St. Pete / Clearwater, Florida.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="/#charters">Charters</a></li>
+          <li><a href="/#boat">The Boat</a></li>
+          <li><a href="/#captain">Captain Ron</a></li>
+          <li><a href="/#faq">FAQ</a></li>
+          <li><a href="/#book">Book a Trip</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Islands</h4>
+        <ul>
+          <li><a href="/islands/shell-key/">Shell Key</a></li>
+          <li><a href="/islands/egmont-key/">Egmont Key</a></li>
+          <li><a href="/islands/caladesi-island/">Caladesi Island</a></li>
+          <li><a href="/islands/pass-a-grille/">Pass-a-Grille</a></li>
+          <li><a href="/islands/fort-de-soto/">Fort De Soto</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Get in Touch</h4>
+        <ul>
+          <li><a data-cfg-link="tel" href="tel:+17273861281">Call <span data-cfg="phone">(727) 386-1281</span></a></li>
+          <li><a data-cfg-link="sms" href="sms:+17273861281">Send a text</a></li>
+          <li><a href="/#book">Booking request</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="wrap footer-bottom">
+      <p>&copy; <span data-year>2026</span> Reel Irie Charters LLC. One love.</p>
+      <p>Free cancellation &middot; Weather reschedules on us</p>
+    </div>
+  </footer>
+
+  <div class="mobile-bar">
+    <a data-cfg-link="tel" href="tel:+17273861281" class="btn btn-ghost"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg> Call</a>
+    <a href="/#book" class="btn btn-primary">Book Now</a>
+  </div>
+
+  <script src="/script.js"></script>
 </body>
 </html>

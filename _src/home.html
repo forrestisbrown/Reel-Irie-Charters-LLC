@@ -1,0 +1,318 @@
+
+  <main>
+
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <div class="hero-media" aria-hidden="true">
+        <img src="/images/boat.webp" alt="" width="1320" height="984" fetchpriority="high">
+      </div>
+      <div class="wrap hero-inner">
+        <p class="eyebrow"><span class="dot"></span> St. Pete / Clearwater, Florida</p>
+        <h1>Island days.<br><span class="rasta-text">Sunset nights.</span></h1>
+        <p class="lead">Private island hopping and sunset charters with Captain Ron. Anchor up at a sandbar, swim the clear Gulf shallows and ride home under a painted sky.</p>
+        <div class="hero-ctas">
+          <a href="/#book" class="btn btn-primary btn-lg">Get Irie &rarr; Book a Trip</a>
+          <a href="/#charters" class="btn btn-ghost btn-lg">See the Charters</a>
+        </div>
+        <ul class="hero-points">
+          <li>Private trips for up to 6</li>
+          <li>Free cancellation</li>
+          <li>Kids welcome</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="rasta-bar" aria-hidden="true"></div>
+
+    <!-- ============ CHARTERS ============ -->
+    <section class="section" id="charters">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">The Menu</p>
+          <h2>Pick Your Trip</h2>
+          <p class="sub">Every charter is private. Rates are for the whole boat, not per person.</p>
+        </div>
+        <div class="trip-grid" id="trip-grid">
+          <!-- cards come from CHARTERS in script.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CANCELLATION BAND ============ -->
+    <section class="promise">
+      <div class="wrap promise-grid">
+        <div class="promise-item">
+          <span class="promise-icon" style="--c:var(--green)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+          <div><h3>Free Cancellation</h3><p>Plans change. Cancel free, no hassle.</p></div>
+        </div>
+        <div class="promise-item">
+          <span class="promise-icon" style="--c:var(--gold)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 1 1 0 9z"/></svg></span>
+          <div><h3>Weather Plan</h3><p>If the weather turns, reschedule for a later date or cancel free.</p></div>
+        </div>
+        <div class="promise-item">
+          <span class="promise-icon" style="--c:var(--red)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+          <div><h3>Nothing Charged Up Front</h3><p>Captain Ron confirms every trip personally first.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="section section-alt">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Easy Booking</p>
+          <h2>Three Steps to the Water</h2>
+        </div>
+        <ol class="steps">
+          <li>
+            <span class="step-num">1</span>
+            <h3>Pick a trip</h3>
+            <p>Choose from the menu or tell us what you're dreaming up.</p>
+          </li>
+          <li>
+            <span class="step-num">2</span>
+            <h3>Pick your day</h3>
+            <p>Send your date, group size and a preferred start time. Takes a minute.</p>
+          </li>
+          <li>
+            <span class="step-num">3</span>
+            <h3>Captain Ron confirms</h3>
+            <p>He checks weather, tides and the calendar, then reaches out to lock it in.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ ISLANDS ============ -->
+    <section class="section" id="islands">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Island Time</p>
+          <h2>Where We Go</h2>
+          <p class="sub">Some of the best water in Florida is right out our back door.</p>
+        </div>
+        <div class="island-grid">
+{{ISLAND_CARDS}}
+          <a href="/?trip=island-hopper#book" class="island-link island-pick">
+            <h3>Can't Decide?</h3>
+            <p>Let Captain Ron pick the best water of the day. He knows these waters like his own backyard.</p>
+            <span class="go">Captain's Choice {{ARROW}}</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ THE BOAT ============ -->
+    <section class="section section-alt" id="boat">
+      <div class="wrap boat">
+        <figure class="boat-photo">
+          <img src="/images/boat.webp" alt="Captain Ron's blue center console anchored in clear green water" width="1320" height="984" loading="lazy">
+        </figure>
+        <div>
+          <p class="eyebrow">The Boat</p>
+          <h2>Just Show Up</h2>
+          <p class="sub left">A roomy center console built for island days. We handle the boat, you bring the good vibes.</p>
+          <ul class="checks">
+            <li>Shade under the T-top</li>
+            <li>Twin Yamaha outboards for a smooth, quick ride</li>
+            <li>Swim ladder for easy in and out</li>
+            <li>Life jackets in every size, infant to adult</li>
+            <li>Cooler space for your food and drinks</li>
+          </ul>
+          <div class="bring-card">
+            <h3>Bring Along</h3>
+            <ul>
+              <li>Sunscreen and sunglasses</li>
+              <li>Hat and a light layer</li>
+              <li>Food and drinks (no glass)</li>
+              <li>Towel and swimsuit</li>
+              <li>Water shoes for the sandbars</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CAPTAIN ============ -->
+    <section class="section" id="captain">
+      <div class="wrap captain">
+        <div class="captain-photo">
+          <img src="/images/logo-full.webp" alt="Reel Irie Charters logo" width="1254" height="1254" loading="lazy">
+        </div>
+        <div>
+          <p class="eyebrow">Meet the Captain</p>
+          <h2>Captain Ron Brown</h2>
+          <p class="captain-tag">40+ years in St. Pete</p>
+          <p>Captain Ron has called St. Pete home for over 40 years, and he'll find any excuse to be on the boat. He knows these islands, sandbars and channels like his own backyard, because for him, they are.</p>
+          <p>Reel Irie Charters is how he shares it. Whether it's your kid's first sandbar, a birthday on the water or a quiet sunset with someone special, he runs every trip like he's taking out family. He knows which sandbar is calm today, where the dolphins are hanging out, and how to time it so you're watching the sunset instead of fighting the crowd.</p>
+          <a href="/#book" class="btn btn-primary">Come Out With Ron</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="section section-alt" id="faq">
+      <div class="wrap narrow">
+        <div class="section-head">
+          <p class="eyebrow">Good to Know</p>
+          <h2>Questions</h2>
+        </div>
+        <div class="faq">
+          <details>
+            <summary>Where do we meet?</summary>
+            <p>We'll send the exact dock location and parking details when your trip is confirmed. We run out of the St. Pete and Clearwater area.</p>
+          </details>
+          <details>
+            <summary>What if the weather turns bad?</summary>
+            <p>Safety comes first. If Captain Ron calls the trip for weather, you can reschedule for a later date or cancel free.</p>
+          </details>
+          <details>
+            <summary>What's your cancellation policy?</summary>
+            <p>Cancellations are free. Plans change, and we get it. Just call or text as early as you can so we can open the date up for someone else.</p>
+          </details>
+          <details>
+            <summary>How many people can come?</summary>
+            <p>Each trip lists its max group size, and kids count toward the total. Ask if you have a bigger crew and we'll figure it out.</p>
+          </details>
+          <details>
+            <summary>Do you have life jackets for kids?</summary>
+            <p>Yes, in every size from infant to adult. Tell us how many kids are coming and their ages when you book, and the right sizes will be on board.</p>
+          </details>
+          <details>
+            <summary>Can we bring food and drinks?</summary>
+            <p>Absolutely. Bring whatever you like. Please skip glass bottles.</p>
+          </details>
+          <details>
+            <summary>Do we pay up front?</summary>
+            <p>No. Nothing is charged until Captain Ron confirms your trip. Tips for the captain are always appreciated.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BOOKING ============ -->
+    <section class="section book" id="book">
+      <div class="wrap book-grid">
+        <div class="book-intro">
+          <p class="eyebrow">Island Time Awaits</p>
+          <h2>Book Your Trip</h2>
+          <p class="sub left">Send a request and Captain Ron will get back to you to confirm the date, time and dock. Nothing is charged until your trip is confirmed.</p>
+
+          <div class="summary" aria-live="polite">
+            <p class="summary-label">Your trip</p>
+            <p class="summary-name" id="sum-name">Pick a trip</p>
+            <p class="summary-meta" id="sum-meta">Choose from the menu or the form.</p>
+          </div>
+
+          <div class="direct">
+            <p>Rather talk it out?</p>
+            <a class="direct-link" data-cfg-link="tel" href="tel:{{PHONE_DIAL}}">
+              <span class="direct-icon">{{PHONE_ICON}}</span>
+              <span><strong>Call Captain Ron</strong><br><span data-cfg="phone">{{PHONE}}</span></span>
+            </a>
+            <a class="direct-link" data-cfg-link="sms" href="sms:{{PHONE_DIAL}}">
+              <span class="direct-icon">{{TEXT_ICON}}</span>
+              <span><strong>Send a text</strong><br><span>Same number, quick replies</span></span>
+            </a>
+          </div>
+        </div>
+
+        <form class="book-form" id="book-form" novalidate>
+          <div class="mode" role="radiogroup" aria-label="Request type">
+            <label><input type="radio" name="request_type" value="Booking Request" checked> <span>Book a Trip</span></label>
+            <label><input type="radio" name="request_type" value="Question"> <span>Just Asking</span></label>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="f-charter">Trip</label>
+              <select id="f-charter" name="charter" required>
+                <option value="">Choose a trip...</option>
+              </select>
+            </div>
+            <div class="field booking-only">
+              <label for="f-island">Where to?</label>
+              <select id="f-island" name="island">
+                <option value="">Captain's choice</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row booking-only">
+            <div class="field">
+              <label for="f-date">Preferred date</label>
+              <input type="date" id="f-date" name="date" required>
+            </div>
+            <div class="field">
+              <label for="f-alt-date">Backup date <span class="opt">(optional)</span></label>
+              <input type="date" id="f-alt-date" name="backup_date">
+            </div>
+          </div>
+
+          <div class="field booking-only">
+            <label for="f-time">Start time</label>
+            <select id="f-time" name="start_time">
+              <option>Morning</option>
+              <option>Midday</option>
+              <option>Afternoon</option>
+              <option>Sunset</option>
+              <option>Flexible</option>
+            </select>
+          </div>
+
+          <fieldset class="guests booking-only" id="guest-row">
+            <legend>Who's coming?</legend>
+            <div class="row">
+              <div class="field">
+                <label for="f-adults">Adults</label>
+                <select id="f-adults" name="adults"></select>
+              </div>
+              <div class="field">
+                <label for="f-kids">Kids <span class="opt">(under 13)</span></label>
+                <select id="f-kids" name="kids"></select>
+              </div>
+            </div>
+            <div class="field" id="kid-ages" hidden>
+              <label for="f-ages">Kids' ages <span class="opt">(so the right life jackets are on board)</span></label>
+              <input type="text" id="f-ages" name="kid_ages" placeholder="e.g. 3, 7 and 10">
+            </div>
+            <p class="guest-note" id="guest-note"></p>
+          </fieldset>
+
+          <div class="row">
+            <div class="field">
+              <label for="f-name">Name</label>
+              <input type="text" id="f-name" name="name" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="f-phone">Phone</label>
+              <input type="tel" id="f-phone" name="phone" autocomplete="tel" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="f-email">Email</label>
+            <input type="email" id="f-email" name="email" autocomplete="email" required>
+          </div>
+
+          <div class="field">
+            <label for="f-notes" id="notes-label">Anything we should know?</label>
+            <textarea id="f-notes" name="notes" rows="4" placeholder="A birthday, a proposal, someone who gets seasick..."></textarea>
+          </div>
+
+          <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit-btn">Get Irie &rarr; Send Request</button>
+          <p class="fine">No payment now. Free cancellation. Captain Ron confirms every trip personally.</p>
+
+          <div class="msg msg-ok" id="msg-ok" hidden>
+            <strong>Got it. Island time is coming!</strong> Captain Ron will reach out soon to confirm your trip.
+          </div>
+          <div class="msg msg-err" id="msg-err" hidden>
+            Something went wrong sending that. Please call or text <span data-cfg="phone">{{PHONE}}</span> instead.
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
