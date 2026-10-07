@@ -26,7 +26,7 @@ ISLANDS = [
         "name": "Shell Key",
         "color": "green",
         "tagline": "Wild, quiet and all sand.",
-        "blurb": "Undeveloped barrier island with clear shallows, shelling and dolphins on the flats.",
+        "blurb": "Undeveloped barrier island with clear shallows, great shelling and quiet sand.",
         "facts": [
             ("Best for", "Shelling, swimming, quiet beach time"),
             ("Vibe", "Wild and untouched"),
@@ -41,7 +41,7 @@ ISLANDS = [
             "Wade in from the boat and walk the beach",
             "Hunt for shells and sand dollars at low tide",
             "Float the clear shallows on the bay side",
-            "Watch for dolphins, rays and wading birds",
+            "Keep an eye out for wildlife like rays, wading birds and dolphins",
         ],
         "tips": [
             "There's no shade or restrooms on the island, so the boat is your home base.",
@@ -52,7 +52,7 @@ ISLANDS = [
         "faq": [
             ("Can we get off the boat?", "Yes. We anchor in the shallows and you can wade straight onto the beach."),
             ("Are there bathrooms on Shell Key?", "No. The island is a nature preserve with no facilities, so plan ahead before we head out."),
-            ("Will we see dolphins?", "Very often. Dolphins feed along the flats and passes around Shell Key, and they love to ride the wake."),
+            ("Will we see dolphins?", "There's a good chance. Dolphins often feed along the flats and passes around Shell Key, but they're wild animals, so sightings are never guaranteed."),
             ("When is the best time to go?", "Mornings are usually calm and less crowded, and lower tides open up more sandbar to explore. Captain Ron will suggest the best window for your date."),
         ],
     },
@@ -76,7 +76,7 @@ ISLANDS = [
             "Walk the brick roads and explore the Fort Dade ruins",
             "See the 1858 lighthouse",
             "Snorkel near the ruins along the shoreline",
-            "Spot gopher tortoises, shorebirds and dolphins",
+            "Look for gopher tortoises and shorebirds along the trails",
         ],
         "tips": [
             "Currents near the shipping channel are strong. Swim close to shore and stay near the boat.",
@@ -111,7 +111,7 @@ ISLANDS = [
             "Swim and float in calm, clear Gulf water",
             "Walk miles of natural beach",
             "Explore the nature trail through the island",
-            "Watch for dolphins on the ride up the coast",
+            "Enjoy the scenic ride up the coast",
         ],
         "tips": [
             "This is a state park, so park rules apply on the island.",
@@ -131,7 +131,7 @@ ISLANDS = [
         "tagline": "Old Florida charm and the best sunsets around.",
         "blurb": "Historic beach town at the tip of St. Pete Beach with sunsets locals swear by.",
         "facts": [
-            ("Best for", "Sunsets, dolphins, cruising"),
+            ("Best for", "Sunsets and cruising"),
             ("Vibe", "Old Florida, laid back"),
             ("Nearby", "Shops and restaurants on 8th Ave"),
             ("Getting there", "Cruise the channel"),
@@ -142,7 +142,7 @@ ISLANDS = [
         ],
         "do": [
             "Catch the sunset from the water",
-            "Spot dolphins working the channel",
+            "Keep an eye out for wildlife in the channel",
             "Cruise past the historic waterfront",
             "Pair it with a stop at Shell Key",
         ],
@@ -171,12 +171,12 @@ ISLANDS = [
         ],
         "about": [
             "Fort De Soto Park spreads across five connected keys at the mouth of Tampa Bay. Its North Beach has been named America's best beach, and the water around the park is full of shallow sandbars that are perfect for anchoring up and swimming.",
-            "It's a favorite for families. The water is calm and shallow, there's plenty of room to spread out, and dolphins are regulars around the park.",
+            "It's a favorite for families. The water is calm and shallow, there's plenty of room to spread out, and there's often wildlife to watch around the park.",
         ],
         "do": [
             "Anchor at a sandbar and swim the shallows",
             "Look for sand dollars and shells",
-            "Spot dolphins, rays and shorebirds",
+            "Watch for rays, shorebirds and other wildlife",
             "See the historic fort from the water",
         ],
         "tips": [

@@ -494,8 +494,8 @@ h1 .rasta-text, h2 .rasta-text { display: inline-block; padding-bottom: .06em; }
 .wx-icon { font-size: 2rem; line-height: 1; }
 .wx-temp { font-weight: 800; font-size: 1.25rem; }
 .wx-temp small { font-weight: 600; font-size: .85rem; color: var(--muted); margin-left: 6px; }
-.wx-rating { display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; background: color-mix(in srgb, var(--r) 16%, transparent); color: var(--r); }
-.wx-rating i, .wx-legend i { width: 7px; height: 7px; border-radius: 50%; background: var(--r); }
+.wx-rating { display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; font-weight: 600; line-height: 1; padding: 4px 10px 4px 8px; border-radius: 999px; color: #e9e4d7; background: rgba(255,255,255,.04); border: 1px solid #2f2f2f; }
+.wx-rating i, .wx-legend i { width: 7px; height: 7px; border-radius: 50%; background: var(--r); box-shadow: 0 0 0 3px color-mix(in srgb, var(--r) 22%, transparent); }
 .wx-stats { display: grid; gap: 3px; width: 100%; font-size: .84rem; padding-top: 8px; border-top: 1px dashed #2c2c2c; }
 .wx-stats span { display: flex; justify-content: space-between; gap: 6px; }
 .wx-stats b { font-weight: 600; color: var(--muted); }
@@ -665,7 +665,7 @@ html.modal-open { overflow: hidden; }
   .wx-stats { grid-area: stats; border: 0; padding: 0; font-size: .8rem; gap: 1px; }
   .wx-stats span { justify-content: flex-start; gap: 6px; }
   .wx-stats span:nth-child(n+3) { display: none; }
-  .wx-rating { grid-area: rating; justify-self: end; font-size: .68rem; padding: 3px 8px; }
+  .wx-rating { grid-area: rating; justify-self: end; font-size: .74rem; padding: 3px 9px 3px 7px; }
   .wx-avail { grid-area: avail; justify-self: end; font-size: .72rem; text-align: right; }
   .wx-cta { display: none; }
   .wx-skel { min-height: 64px; }
