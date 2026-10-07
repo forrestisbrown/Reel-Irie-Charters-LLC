@@ -23,7 +23,7 @@
   // Bookings and calendar. Create once with: npx wrangler d1 create reel-irie
   // then paste the database_id it prints here and run: npm run db:remote
   "d1_databases": [
-    { "binding": "DB", "database_name": "reel-irie", "database_id": "00000000-0000-0000-0000-000000000000" }
+    { "binding": "DB", "database_name": "reel-irie", "database_id": "205dd00b-f57f-401e-afa2-52f5176fc0e7" }
   ],
 
   "vars": {
