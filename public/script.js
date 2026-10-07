@@ -1,112 +1,4 @@
-/* ==========================================================
-   REEL IRIE CHARTERS — edit your info and trips right here.
-   ========================================================== */
-
-const CONFIG = {
-  captainName: "Captain Ron Brown",
-  phone: "(727) 386-1281",           // shown on the site
-  phoneDial: "+17273861281",         // used for tap to call / text
-  // Where booking requests are sent (FormSubmit.co). The first request sends an
-  // activation email to this address; click it once and requests start arriving.
-  formEmail: "forrestisbrown@icloud.com",
-  // Optional: a Google Sheet (File > Share > Publish to web > CSV) listing days off,
-  // on call days and booked dates. Leave "" to use only the weekly schedule below.
-  availabilitySheet: "",
-  // Forecast spot: just off the St. Pete beaches
-  forecastSpot: { lat: 27.69, lon: -82.74 },
-};
-
-// Which trips run on which days. "all" means every trip, or list trip ids.
-// Specific dates can be changed in the availability sheet (see README).
-const SCHEDULE = {
-  weekdays: ["sunset"], // Monday to Friday
-  weekends: "all",      // Saturday and Sunday
-};
-
-// Islands. These match the pages in /islands/.
-const ISLANDS = [
-  { id: "shell-key", name: "Shell Key" },
-  { id: "egmont-key", name: "Egmont Key" },
-  { id: "caladesi-island", name: "Caladesi Island" },
-  { id: "pass-a-grille", name: "Pass-a-Grille" },
-  { id: "fort-de-soto", name: "Fort De Soto" },
-];
-
-// The trip menu. Add, remove or reorder trips here.
-// price: number, or null to show "Call"   islands: which island pages list this trip
-const CHARTERS = [
-  {
-    id: "island-hopper",
-    name: "Island Hopper",
-    when: "Half Day",
-    hours: 4,
-    guests: 6,
-    price: 500,
-    badge: "Most Popular",
-    desc: "Two of our favorite spots in one trip. Wade onto a barrier island, swim a sandbar and watch for dolphins on the ride between.",
-    perks: ["2 island stops", "Swimming", "Shelling", "Dolphin spotting"],
-    islands: ["shell-key", "fort-de-soto", "pass-a-grille", "egmont-key", "caladesi-island"],
-  },
-  {
-    id: "sunset",
-    name: "Sunset Irie Cruise",
-    when: "Sunset",
-    hours: 2,
-    guests: 6,
-    price: 300,
-    badge: "Golden Hour",
-    desc: "Cruise the Pass-a-Grille channel as the sky lights up, then watch the sun drop into the Gulf. Bring your drinks and your people.",
-    perks: ["Sunset views", "Dolphins", "Date night", "Celebrations"],
-    islands: ["pass-a-grille", "shell-key", "fort-de-soto"],
-    time: "Sunset",
-  },
-  {
-    id: "sandbar-sunset",
-    name: "Sandbar to Sunset",
-    when: "Afternoon",
-    hours: 4,
-    guests: 6,
-    price: 575,
-    badge: "Best of Both",
-    desc: "Spend the afternoon anchored up at a sandbar, then stay out for the sunset ride home. The full Irie experience.",
-    perks: ["Sandbar time", "Swimming", "Sunset ride", "Bring a picnic"],
-    islands: ["shell-key", "fort-de-soto", "pass-a-grille"],
-    time: "Afternoon",
-  },
-  {
-    id: "egmont",
-    name: "Egmont Key Explorer",
-    when: "Half Day",
-    hours: 4,
-    guests: 6,
-    price: 550,
-    desc: "Walk the brick roads of Fort Dade, see the 1858 lighthouse, snorkel near the old fort ruins and meet the gopher tortoises.",
-    perks: ["Fort ruins", "Lighthouse", "Snorkeling", "Wildlife"],
-    islands: ["egmont-key"],
-  },
-  {
-    id: "full-day",
-    name: "Full Day Island Escape",
-    when: "Full Day",
-    hours: 6,
-    guests: 6,
-    price: 750,
-    desc: "Three stops, lunch on the sand and nowhere to be. Pick your islands or let Captain Ron choose the best water of the day.",
-    perks: ["3 island stops", "Lunch on the sand", "Swimming", "Shelling"],
-    islands: ["shell-key", "egmont-key", "caladesi-island", "pass-a-grille", "fort-de-soto"],
-  },
-];
-
-const CUSTOM = {
-  id: "custom",
-  name: "Celebrations & Custom",
-  when: "Your Call",
-  hours: null,
-  guests: 6,
-  price: null,
-  desc: "Birthdays, proposals, family in town, a day off with your crew. Tell us the occasion and we'll plan the trip around it.",
-  perks: ["Birthdays", "Proposals", "Family visits", "Any idea you've got"],
-};
+/* Reel Irie Charters — site behavior. Settings live in config.js. */
 
 /* ---------- Everything below runs the site ---------- */
 
@@ -171,7 +63,24 @@ function csvCells(line) {
   return out;
 }
 
+function setOverride(iso, status, note = "") {
+  const s = String(status).toLowerCase();
+  if (/off|booked|closed|on call|unavailable/.test(s)) overrides[iso] = { open: false, note: s.includes("booked") ? "Booked" : "Unavailable" };
+  else if (/sunset/.test(s)) overrides[iso] = { open: true, trips: ["sunset"], note };
+  else if (/open|all/.test(s)) overrides[iso] = { open: true, trips: "all", note };
+}
+
+// Days Captain Ron changed in the Captain's Deck (or, as a backup, the Google Sheet)
 const availabilityReady = (async () => {
+  try {
+    const res = await fetch("/api/availability");
+    if (res.ok && (res.headers.get("content-type") || "").includes("json")) {
+      const { days } = await res.json();
+      Object.entries(days).forEach(([iso, d]) => setOverride(iso, d.status, d.note));
+      return;
+    }
+  } catch (err) { /* static preview, no API */ }
+
   if (!CONFIG.availabilitySheet) return;
   try {
     const csv = await (await fetch(CONFIG.availabilitySheet, { cache: "no-store" })).text();
@@ -180,11 +89,8 @@ const availabilityReady = (async () => {
     csv.split(/\r?\n/).forEach((line) => {
       const [date = "", status = "", note = ""] = csvCells(line);
       const iso = toIso(date); // the header row and blank rows fail here and are skipped
-      const s = status.toLowerCase();
-      if (!iso || !s || iso < todayIso) return;
-      if (/off|booked|closed|on call|unavailable/.test(s)) overrides[iso] = { open: false, note: s.includes("booked") ? "Booked" : "Unavailable" };
-      else if (/sunset/.test(s)) overrides[iso] = { open: true, trips: ["sunset"], note };
-      else if (/open|all/.test(s)) overrides[iso] = { open: true, trips: "all", note };
+      if (!iso || !status || iso < todayIso) return;
+      setOverride(iso, status, note);
     });
   } catch (err) {
     console.warn("Availability sheet not loaded:", err);
@@ -298,6 +204,7 @@ if (dlg && form) {
   const guestNote = $("#guest-note");
   const done = $("#bk-done");
   const count = { adults: 2, kids: 0 };
+  const defaultErr = $("#msg-err").innerHTML;
   let step = 1;
 
   $("#trip-options").innerHTML = allTrips.map((t) => `
@@ -502,14 +409,42 @@ if (dlg && form) {
     const btn = $("#submit-btn");
     btn.disabled = true;
     btn.textContent = "Sending...";
+    const errBox = $("#msg-err");
+    errBox.innerHTML = defaultErr;
     try {
-      const res = await fetch(`https://formsubmit.co/ajax/${CONFIG.formEmail}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const json = await res.json();
-      if (String(json.success) !== "true") throw new Error(json.message);
+      // 1) Save it in the Captain's Deck (the API emails Ron too)
+      let saved = false, problem = "";
+      try {
+        const res = await fetch("/api/book", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            trip_id: t.id, trip_name: t.name, date: d.date, adults: d.adults, kids: d.kids,
+            kid_ages: +d.kids ? d.kid_ages : "", island: islandName(d.island) || "",
+            name: d.name, phone: d.phone, email: d.email,
+            notes: [t.time ? `Start time: ${t.time}` : "", d.notes || ""].filter(Boolean).join("\n"),
+            _honey: d._honey,
+          }),
+        });
+        const isJson = (res.headers.get("content-type") || "").includes("json");
+        if (isJson) {
+          const out = await res.json();
+          if (out.ok) saved = true;
+          else if (res.status === 400) problem = out.error;
+        }
+      } catch (err) { /* no API here; fall through to email */ }
+      if (problem) { errBox.textContent = problem; throw new Error(problem); }
+
+      // 2) No API (static preview): email it straight through FormSubmit
+      if (!saved) {
+        const res = await fetch(`https://formsubmit.co/ajax/${CONFIG.formEmail}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const json = await res.json();
+        if (String(json.success) !== "true") throw new Error(json.message);
+      }
       form.reset();
       count.adults = 2; count.kids = 0;
       form.hidden = true;

@@ -13,6 +13,7 @@ import json
 
 SRC = Path(__file__).parent
 ROOT = SRC.parent
+PUBLIC = ROOT / "public"  # everything in here is the live website
 
 BUSINESS = "Reel Irie Charters"
 LEGAL = "Reel Irie Charters LLC"
@@ -480,6 +481,7 @@ def footer():
   </div>
 
 {booking_modal()}
+  <script src="/config.js"></script>
   <script src="/script.js"></script>
 </body>
 </html>
@@ -667,10 +669,10 @@ def main():
         + body
         + footer()
     )
-    (ROOT / "index.html").write_text(home, encoding="utf-8")
+    (PUBLIC / "index.html").write_text(home, encoding="utf-8")
 
     for i in ISLANDS:
-        out = ROOT / "islands" / i["id"]
+        out = PUBLIC / "islands" / i["id"]
         out.mkdir(parents=True, exist_ok=True)
         (out / "index.html").write_text(island_page(i), encoding="utf-8")
 
@@ -689,7 +691,7 @@ def main():
 """
         + footer()
     )
-    (ROOT / "404.html").write_text(lost, encoding="utf-8")
+    (PUBLIC / "404.html").write_text(lost, encoding="utf-8")
     print("built index.html, 404.html and", len(ISLANDS), "island pages")
 
 

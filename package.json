@@ -1,0 +1,17 @@
+{
+  "name": "reel-irie-charters",
+  "private": true,
+  "scripts": {
+    "build": "python _src/build.py",
+    "dev": "wrangler dev --port 8787",
+    "db:local": "wrangler d1 execute reel-irie --local --file=worker/schema.sql",
+    "db:remote": "wrangler d1 execute reel-irie --remote --file=worker/schema.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^4"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "workerd@1.20261006.1": true
+  }
+}

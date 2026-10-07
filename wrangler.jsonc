@@ -1,11 +1,42 @@
 {
   "name": "reel-irie-charters",
   "compatibility_date": "2026-09-01",
-  // Add the custom domain here once it's bought, like SolarShield:
-  // "routes": [{ "pattern": "reeliriecharters.com", "custom_domain": true }],
+  "main": "worker/index.js",
+
+  // Add the custom domain once it's connected to this Cloudflare account:
+  // "routes": [
+  //   { "pattern": "reeliriecharters.com", "custom_domain": true },
+  //   { "pattern": "www.reeliriecharters.com", "custom_domain": true }
+  // ],
+
   "assets": {
-    "directory": "./",
+    "directory": "./public",
+    "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
-    "not_found_handling": "404-page"
+    "not_found_handling": "404-page",
+    // The worker checks the captain's login before serving these
+    "run_worker_first": ["/admin", "/admin/*", "/api/*"]
+  },
+
+  // Bookings and calendar. Create once with: npx wrangler d1 create reel-irie
+  // then paste the database_id it prints here and run: npm run db:remote
+  "d1_databases": [
+    { "binding": "DB", "database_name": "reel-irie", "database_id": "00000000-0000-0000-0000-000000000000" }
+  ],
+
+  "vars": {
+    // Who can open /admin (comma separated). Must match the Cloudflare Access policy.
+    "ADMIN_EMAILS": "forrestisbrown@icloud.com",
+    // From Zero Trust > Settings (team domain) and the Access application's AUD tag
+    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_AUD": "",
+    // Booking emails go here until Email Routing (below) is set up
+    "FORMSUBMIT_EMAIL": "forrestisbrown@icloud.com"
+    // Once Email Routing is on for the domain, add:
+    // "NOTIFY_FROM": "bookings@reeliriecharters.com",
+    // "NOTIFY_TO": "<captain's verified email>"
   }
+
+  // Branded booking emails through Cloudflare Email Routing (after the domain is connected):
+  // "send_email": [{ "name": "NOTIFY" }]
 }

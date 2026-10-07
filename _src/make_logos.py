@@ -9,7 +9,8 @@ from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 
 SRC = Path(__file__).parent
 ROOT = SRC.parent
-IMG = ROOT / "images"
+PUBLIC = ROOT / "public"
+IMG = PUBLIC / "images"
 FONT = str(SRC / "fonts" / "Bevan-Regular.ttf")
 NAME = "REEL IRIE CHARTERS"
 
@@ -117,8 +118,8 @@ def main():
     s = max(fish_rgba.size) + 60
     sq = Image.new("RGB", (s, s), (0, 0, 0))
     sq.paste(fish_rgba, ((s - fish_rgba.width) // 2, (s - fish_rgba.height) // 2), fish_rgba)
-    sq.resize((192, 192), Image.LANCZOS).save(ROOT / "favicon.png", optimize=True)
-    sq.resize((180, 180), Image.LANCZOS).save(ROOT / "apple-touch-icon.png", optimize=True)
+    sq.resize((192, 192), Image.LANCZOS).save(PUBLIC / "favicon.png", optimize=True)
+    sq.resize((180, 180), Image.LANCZOS).save(PUBLIC / "apple-touch-icon.png", optimize=True)
     sq.resize((512, 512), Image.LANCZOS).save(IMG / "icon-512.png", optimize=True)
 
     # 4) Boat photo for the hero, plus a share image
