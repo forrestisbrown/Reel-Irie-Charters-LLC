@@ -1,5 +1,5 @@
 {
-  "name": "reel-irie-charters",
+  "name": "reel-irie-charters-llc",
   "compatibility_date": "2026-09-01",
   "main": "worker/index.js",
   // Lets the worker import schema.sql as text (it creates the tables on first use)
