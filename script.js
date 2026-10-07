@@ -145,25 +145,43 @@ function tripsLabel(st) {
 }
 
 // Sheet columns: date, status, note. Status: off / booked / sunset only / open
+const pad = (n) => String(n).padStart(2, "0");
 function toIso(s) {
   s = s.trim();
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
   const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
-  if (!m) return null;
-  const y = m[3].length === 2 ? "20" + m[3] : m[3];
-  return `${y}-${m[1].padStart(2, "0")}-${m[2].padStart(2, "0")}`;
+  if (m) return `${m[3].length === 2 ? "20" + m[3] : m[3]}-${pad(m[1])}-${pad(m[2])}`;
+  // Other formats Google Sheets might use, like "Oct 18, 2026" or "Sat, Oct 18, 2026"
+  const d = /[a-z]/i.test(s) && /\d{4}/.test(s) ? new Date(s.replace(/^[a-z]+,\s*/i, "")) : null;
+  return d && !isNaN(d) ? `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}` : null;
+}
+
+// Splits one CSV line, respecting "quoted, fields"
+function csvCells(line) {
+  const out = [];
+  let cur = "", q = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (q && ch === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+    else if (ch === '"') q = !q;
+    else if (ch === "," && !q) { out.push(cur.trim()); cur = ""; }
+    else cur += ch;
+  }
+  out.push(cur.trim());
+  return out;
 }
 
 const availabilityReady = (async () => {
   if (!CONFIG.availabilitySheet) return;
   try {
     const csv = await (await fetch(CONFIG.availabilitySheet, { cache: "no-store" })).text();
-    csv.split(/\r?\n/).slice(1).forEach((line) => {
-      const [date = "", status = "", ...rest] = line.split(",").map((c) => c.replace(/^"|"$/g, "").trim());
-      const iso = toIso(date);
+    const now = new Date();
+    const todayIso = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+    csv.split(/\r?\n/).forEach((line) => {
+      const [date = "", status = "", note = ""] = csvCells(line);
+      const iso = toIso(date); // the header row and blank rows fail here and are skipped
       const s = status.toLowerCase();
-      if (!iso || !s) return;
-      const note = rest.join(",").trim();
+      if (!iso || !s || iso < todayIso) return;
       if (/off|booked|closed|on call|unavailable/.test(s)) overrides[iso] = { open: false, note: s.includes("booked") ? "Booked" : "Unavailable" };
       else if (/sunset/.test(s)) overrides[iso] = { open: true, trips: ["sunset"], note };
       else if (/open|all/.test(s)) overrides[iso] = { open: true, trips: "all", note };

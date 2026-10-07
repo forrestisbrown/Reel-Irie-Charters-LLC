@@ -27,12 +27,13 @@ python _src/build.py
 
 The weekly pattern is `SCHEDULE` at the top of `script.js` (right now: weekdays are Sunset Irie Cruise only, weekends run every trip). The trip cards, the forecast and the booking form all read from it.
 
-For specific dates (on call days, booked days, days off), Ron can use a Google Sheet from his phone:
+For specific dates (on call days, booked days, days off), Ron uses a Google Sheet from his phone. A ready made template is built by `python _src/make_availability_sheet.py` (saves `Reel Irie Availability.xlsx` to Downloads), with a status dropdown, color coding and a How to use tab.
 
-1. Make a sheet with three columns: `date`, `status`, `note`
-2. Add a row per date, e.g. `10/18/2026, off, On call` or `10/24/2026, sunset only` or `10/22/2026, open`
-3. File > Share > Publish to web > choose the sheet > **Comma separated values (.csv)** > Publish
-4. Paste that link into `CONFIG.availabilitySheet` in `script.js` (one time)
+1. Upload the .xlsx to Google Drive, open it with Google Sheets, then File > Save as Google Sheets
+2. File > Share > Publish to web > pick the **Availability** tab > **Comma separated values (.csv)** > Publish
+3. Paste that link into `CONFIG.availabilitySheet` in `script.js` (one time)
+
+Statuses: `off`, `on call`, `booked` (blocks the day), `sunset only`, `open` (every trip). Past dates are ignored.
 
 After that, edits to the sheet show up on the site within a minute, with no code changes. `off`, `booked` and `on call` block the date in the form and grey it out in the forecast.
 
