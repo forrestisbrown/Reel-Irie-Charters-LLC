@@ -10,6 +10,7 @@ Static site hosted on Cloudflare (see `wrangler.jsonc`). No framework, no instal
 | --- | --- |
 | Trips, prices, phone, form email | top of `script.js` (`CONFIG`, `CHARTERS`) |
 | Home page content | `_src/home.html` |
+| Booking pop up | `booking_modal()` in `_src/build.py` |
 | Island pages, shared header/menu/footer | `_src/build.py` |
 | Styles | `styles.css` |
 | Logo and image generation | `_src/make_logos.py` |
@@ -21,6 +22,23 @@ python _src/build.py
 ```
 
 `index.html`, `404.html` and `islands/*/index.html` are generated, so edit their sources in `_src/` rather than the output.
+
+## Schedule and availability
+
+The weekly pattern is `SCHEDULE` at the top of `script.js` (right now: weekdays are Sunset Irie Cruise only, weekends run every trip). The trip cards, the forecast and the booking form all read from it.
+
+For specific dates (on call days, booked days, days off), Ron can use a Google Sheet from his phone:
+
+1. Make a sheet with three columns: `date`, `status`, `note`
+2. Add a row per date, e.g. `10/18/2026, off, On call` or `10/24/2026, sunset only` or `10/22/2026, open`
+3. File > Share > Publish to web > choose the sheet > **Comma separated values (.csv)** > Publish
+4. Paste that link into `CONFIG.availabilitySheet` in `script.js` (one time)
+
+After that, edits to the sheet show up on the site within a minute, with no code changes. `off`, `booked` and `on call` block the date in the form and grey it out in the forecast.
+
+## Forecast
+
+The Boat Day Forecast uses [Open-Meteo](https://open-meteo.com) (free, no key): weather, wind, rain chance and sunset from the forecast API, and Gulf wave height and water temperature from the marine API. Ratings (Great / Good / Iffy / Rough) are set in `rate()` in `script.js`.
 
 ## Booking form
 

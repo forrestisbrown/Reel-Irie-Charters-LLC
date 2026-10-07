@@ -190,128 +190,41 @@
       </div>
     </section>
 
-    <!-- ============ BOOKING ============ -->
-    <section class="section book" id="book">
-      <div class="wrap book-grid">
-        <div class="book-intro">
-          <p class="eyebrow">Island Time Awaits</p>
-          <h2>Book Your Trip</h2>
-          <p class="sub left">Send a request and Captain Ron will get back to you to confirm the date, time and dock. Nothing is charged until your trip is confirmed.</p>
-
-          <div class="summary" aria-live="polite">
-            <p class="summary-label">Your trip</p>
-            <p class="summary-name" id="sum-name">Pick a trip</p>
-            <p class="summary-meta" id="sum-meta">Choose from the menu or the form.</p>
-          </div>
-
-          <div class="direct">
-            <p>Rather talk it out?</p>
-            <a class="direct-link" data-cfg-link="tel" href="tel:{{PHONE_DIAL}}">
-              <span class="direct-icon">{{PHONE_ICON}}</span>
-              <span><strong>Call Captain Ron</strong><br><span data-cfg="phone">{{PHONE}}</span></span>
-            </a>
-            <a class="direct-link" data-cfg-link="sms" href="sms:{{PHONE_DIAL}}">
-              <span class="direct-icon">{{TEXT_ICON}}</span>
-              <span><strong>Send a text</strong><br><span>Same number, quick replies</span></span>
-            </a>
+    <!-- ============ FORECAST ============ -->
+    <section class="section section-alt forecast" id="forecast">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow">Plan Your Day</p>
+          <h2>Boat Day Forecast</h2>
+          <p class="sub">Live conditions off the St. Pete beaches. Tap a day to book it.</p>
+        </div>
+        <div class="wx-now" id="wx-now" aria-label="Current conditions"></div>
+        <div class="wx-scroll">
+          <div class="wx-grid" id="wx-grid">
+            <div class="wx-day wx-skel"></div><div class="wx-day wx-skel"></div><div class="wx-day wx-skel"></div><div class="wx-day wx-skel"></div><div class="wx-day wx-skel"></div><div class="wx-day wx-skel"></div><div class="wx-day wx-skel"></div>
           </div>
         </div>
+        <div class="wx-legend">
+          <span class="wx-great"><i></i>Great</span>
+          <span class="wx-good"><i></i>Good</span>
+          <span class="wx-iffy"><i></i>Iffy</span>
+          <span class="wx-rough"><i></i>Rough</span>
+        </div>
+        <p class="fine center">Weekdays are sunset cruises, weekends run every trip. Florida weather changes fast, so Captain Ron makes the final call on the day. If it turns, reschedule or cancel free. Forecast data from <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>.</p>
+      </div>
+    </section>
 
-        <form class="book-form" id="book-form" novalidate>
-          <div class="mode" role="radiogroup" aria-label="Request type">
-            <label><input type="radio" name="request_type" value="Booking Request" checked> <span>Book a Trip</span></label>
-            <label><input type="radio" name="request_type" value="Question"> <span>Just Asking</span></label>
-          </div>
-
-          <div class="row">
-            <div class="field">
-              <label for="f-charter">Trip</label>
-              <select id="f-charter" name="charter" required>
-                <option value="">Choose a trip...</option>
-              </select>
-            </div>
-            <div class="field booking-only">
-              <label for="f-island">Where to?</label>
-              <select id="f-island" name="island">
-                <option value="">Captain's choice</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="row booking-only">
-            <div class="field">
-              <label for="f-date">Preferred date</label>
-              <input type="date" id="f-date" name="date" required>
-            </div>
-            <div class="field">
-              <label for="f-alt-date">Backup date <span class="opt">(optional)</span></label>
-              <input type="date" id="f-alt-date" name="backup_date">
-            </div>
-          </div>
-
-          <div class="field booking-only">
-            <label for="f-time">Start time</label>
-            <select id="f-time" name="start_time">
-              <option>Morning</option>
-              <option>Midday</option>
-              <option>Afternoon</option>
-              <option>Sunset</option>
-              <option>Flexible</option>
-            </select>
-          </div>
-
-          <fieldset class="guests booking-only" id="guest-row">
-            <legend>Who's coming?</legend>
-            <div class="row">
-              <div class="field">
-                <label for="f-adults">Adults</label>
-                <select id="f-adults" name="adults"></select>
-              </div>
-              <div class="field">
-                <label for="f-kids">Kids <span class="opt">(under 13)</span></label>
-                <select id="f-kids" name="kids"></select>
-              </div>
-            </div>
-            <div class="field" id="kid-ages" hidden>
-              <label for="f-ages">Kids' ages <span class="opt">(so the right life jackets are on board)</span></label>
-              <input type="text" id="f-ages" name="kid_ages" placeholder="e.g. 3, 7 and 10">
-            </div>
-            <p class="guest-note" id="guest-note"></p>
-          </fieldset>
-
-          <div class="row">
-            <div class="field">
-              <label for="f-name">Name</label>
-              <input type="text" id="f-name" name="name" autocomplete="name" required>
-            </div>
-            <div class="field">
-              <label for="f-phone">Phone</label>
-              <input type="tel" id="f-phone" name="phone" autocomplete="tel" required>
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="f-email">Email</label>
-            <input type="email" id="f-email" name="email" autocomplete="email" required>
-          </div>
-
-          <div class="field">
-            <label for="f-notes" id="notes-label">Anything we should know?</label>
-            <textarea id="f-notes" name="notes" rows="4" placeholder="A birthday, a proposal, someone who gets seasick..."></textarea>
-          </div>
-
-          <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-
-          <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit-btn">Get Irie &rarr; Send Request</button>
-          <p class="fine">No payment now. Free cancellation. Captain Ron confirms every trip personally.</p>
-
-          <div class="msg msg-ok" id="msg-ok" hidden>
-            <strong>Got it. Island time is coming!</strong> Captain Ron will reach out soon to confirm your trip.
-          </div>
-          <div class="msg msg-err" id="msg-err" hidden>
-            Something went wrong sending that. Please call or text <span data-cfg="phone">{{PHONE}}</span> instead.
-          </div>
-        </form>
+    <!-- ============ BOOK CTA (the form itself is the pop up in build.py) ============ -->
+    <section class="book-cta" id="book">
+      <img src="/images/fish.webp" alt="" class="book-cta-fish" aria-hidden="true">
+      <div class="wrap book-cta-inner">
+        <p class="eyebrow">Island Time Awaits</p>
+        <h2>Ready to <span class="rasta-text">get irie?</span></h2>
+        <p class="sub">Send a request in a minute. Captain Ron confirms every trip personally, and nothing is charged up front.</p>
+        <div class="hero-ctas">
+          <a href="/#book" class="btn btn-primary btn-lg" data-book>Book Your Trip {{ARROW}}</a>
+          <a data-cfg-link="tel" href="tel:{{PHONE_DIAL}}" class="btn btn-ghost btn-lg">{{PHONE_ICON}} <span data-cfg="phone">{{PHONE}}</span></a>
+        </div>
       </div>
     </section>
 

@@ -287,6 +287,7 @@ def nav(current=None):
       <a href="/#boat"><span class="num">03</span>The Boat</a>
       <a href="/#captain"><span class="num">04</span>Captain Ron</a>
       <a href="/#faq"><span class="num">05</span>FAQ</a>
+      <a href="/#forecast"><span class="num">06</span>Forecast</a>
     </nav>
     <div class="menu-foot">
       <a href="/#book" class="btn btn-primary btn-lg btn-block">Book Your Trip {ARROW}</a>
@@ -297,6 +298,145 @@ def nav(current=None):
       <p class="menu-note">Free cancellation &middot; Weather reschedules on us</p>
     </div>
   </div>
+"""
+
+
+CHECK = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>'
+
+
+def booking_modal():
+    """The booking pop up. Lives on every page; any link to /#book opens it."""
+    return f"""
+  <dialog class="bk" id="booking" aria-labelledby="bk-title">
+    <div class="bk-shell">
+      <aside class="bk-side">
+        <div class="bk-stripe" aria-hidden="true"></div>
+        <img src="/images/fish.webp" alt="" class="bk-fish" aria-hidden="true">
+        <p class="eyebrow">Island Time Awaits</p>
+        <h2 id="bk-title">Book Your Trip</h2>
+        <div class="summary" aria-live="polite">
+          <p class="summary-label">Your trip</p>
+          <p class="summary-name" id="sum-name">Pick a trip</p>
+          <p class="summary-meta" id="sum-meta">Choose one below to get started.</p>
+        </div>
+        <ul class="bk-promises">
+          <li>{CHECK} Free cancellation</li>
+          <li>{CHECK} Weather? Reschedule or cancel free</li>
+          <li>{CHECK} Nothing charged up front</li>
+        </ul>
+        <div class="bk-direct">
+          <a data-cfg-link="tel" href="tel:{PHONE_DIAL}">{PHONE_ICON} Call</a>
+          <a data-cfg-link="sms" href="sms:{PHONE_DIAL}">{TEXT_ICON} Text</a>
+        </div>
+      </aside>
+
+      <div class="bk-main">
+        <button class="bk-close" type="button" aria-label="Close booking">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+
+        <form class="book-form" id="book-form" novalidate>
+          <div class="mode" role="radiogroup" aria-label="Request type">
+            <label><input type="radio" name="request_type" value="Booking Request" checked> <span>Book a Trip</span></label>
+            <label><input type="radio" name="request_type" value="Question"> <span>Just Asking</span></label>
+          </div>
+
+          <fieldset class="trip-pick" id="trip-pick">
+            <legend>Choose your trip <span class="opt ask-only">(optional)</span></legend>
+            <div class="trip-options" id="trip-options"></div>
+          </fieldset>
+
+          <div class="row booking-only">
+            <div class="field">
+              <label for="f-island">Where to?</label>
+              <select id="f-island" name="island">
+                <option value="">Captain's choice</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-time">Start time</label>
+              <select id="f-time" name="start_time">
+                <option>Morning</option>
+                <option>Midday</option>
+                <option>Afternoon</option>
+                <option>Sunset</option>
+                <option>Flexible</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row booking-only">
+            <div class="field">
+              <label for="f-date">Preferred date</label>
+              <input type="date" id="f-date" name="date" required>
+            </div>
+            <div class="field">
+              <label for="f-alt-date">Backup date <span class="opt">(optional)</span></label>
+              <input type="date" id="f-alt-date" name="backup_date">
+            </div>
+          </div>
+          <p class="date-note booking-only" id="date-note" hidden></p>
+
+          <fieldset class="guests booking-only" id="guest-row">
+            <legend>Who's coming?</legend>
+            <div class="row">
+              <div class="field">
+                <label for="f-adults">Adults</label>
+                <select id="f-adults" name="adults"></select>
+              </div>
+              <div class="field">
+                <label for="f-kids">Kids <span class="opt">(under 13)</span></label>
+                <select id="f-kids" name="kids"></select>
+              </div>
+            </div>
+            <div class="field" id="kid-ages" hidden>
+              <label for="f-ages">Kids' ages <span class="opt">(so the right life jackets are on board)</span></label>
+              <input type="text" id="f-ages" name="kid_ages" placeholder="e.g. 3, 7 and 10">
+            </div>
+            <p class="guest-note" id="guest-note"></p>
+          </fieldset>
+
+          <div class="row">
+            <div class="field">
+              <label for="f-name">Name</label>
+              <input type="text" id="f-name" name="name" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="f-phone">Phone</label>
+              <input type="tel" id="f-phone" name="phone" autocomplete="tel" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="f-email">Email</label>
+            <input type="email" id="f-email" name="email" autocomplete="email" required>
+          </div>
+
+          <div class="field">
+            <label for="f-notes" id="notes-label">Anything we should know?</label>
+            <textarea id="f-notes" name="notes" rows="3" placeholder="A birthday, a proposal, someone who gets seasick..."></textarea>
+          </div>
+
+          <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <div class="bk-submit">
+            <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit-btn">Get Irie &rarr; Send Request</button>
+            <p class="fine">No payment now. Captain Ron confirms every trip personally.</p>
+          </div>
+          <div class="msg msg-err" id="msg-err" hidden>
+            Something went wrong sending that. Please call or text <span data-cfg="phone">{PHONE}</span> instead.
+          </div>
+        </form>
+
+        <div class="bk-done" id="bk-done" hidden>
+          <img src="/images/fish.webp" alt="" width="180" height="150">
+          <h3>You're on the line!</h3>
+          <p>Captain Ron will reach out soon to confirm your date, time and dock. Keep an eye on your phone.</p>
+          <button type="button" class="btn btn-primary bk-close-done">Back to the Site</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
 """
 
 
@@ -317,6 +457,7 @@ def footer():
           <li><a href="/#boat">The Boat</a></li>
           <li><a href="/#captain">Captain Ron</a></li>
           <li><a href="/#faq">FAQ</a></li>
+          <li><a href="/#forecast">Forecast</a></li>
           <li><a href="/#book">Book a Trip</a></li>
         </ul>
       </div>
@@ -346,6 +487,7 @@ def footer():
     <a href="/#book" class="btn btn-primary">Book Now</a>
   </div>
 
+{booking_modal()}
   <script src="/script.js"></script>
 </body>
 </html>
@@ -417,7 +559,7 @@ def island_page(i):
         <h1>{i["name"]}</h1>
         <p class="ihero-tag">{escape(i["tagline"])}</p>
         <div class="hero-ctas">
-          <a href="/?island={i["id"]}#book" class="btn btn-primary btn-lg">Book a Trip Here {ARROW}</a>
+          <a href="/?island={i["id"]}#book" class="btn btn-primary btn-lg" data-book data-island="{i["id"]}">Book a Trip Here {ARROW}</a>
           <a data-cfg-link="tel" href="tel:{PHONE_DIAL}" class="btn btn-ghost btn-lg">{PHONE_ICON} <span data-cfg="phone">{PHONE}</span></a>
         </div>
       </div>
@@ -498,7 +640,7 @@ def island_page(i):
           <h2>Ready for <span class="rasta-text">island time?</span></h2>
           <p>Free cancellation, and if the weather turns we'll reschedule on us.</p>
         </div>
-        <a href="/?island={i["id"]}#book" class="btn btn-primary btn-lg">Book {i["name"]} {ARROW}</a>
+        <a href="/?island={i["id"]}#book" class="btn btn-primary btn-lg" data-book data-island="{i["id"]}">Book {i["name"]} {ARROW}</a>
       </div>
     </section>
   </main>

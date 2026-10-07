@@ -9,6 +9,18 @@ const CONFIG = {
   // Where booking requests are sent (FormSubmit.co). The first request sends an
   // activation email to this address; click it once and requests start arriving.
   formEmail: "forrestisbrown@icloud.com",
+  // Optional: a Google Sheet (File > Share > Publish to web > CSV) listing days off,
+  // on call days and booked dates. Leave "" to use only the weekly schedule below.
+  availabilitySheet: "",
+  // Forecast spot: just off the St. Pete beaches
+  forecastSpot: { lat: 27.69, lon: -82.74 },
+};
+
+// Which trips run on which days. "all" means every trip, or list trip ids.
+// Specific dates can be changed in the availability sheet (see README).
+const SCHEDULE = {
+  weekdays: ["sunset"], // Monday to Friday
+  weekends: "all",      // Saturday and Sunday
 };
 
 // Islands. These match the pages in /islands/.
@@ -106,6 +118,61 @@ const findTrip = (id) => allTrips.find((t) => t.id === id);
 const islandName = (id) => (ISLANDS.find((i) => i.id === id) || {}).name;
 const params = new URLSearchParams(location.search);
 
+/* ---------- Availability ---------- */
+// Date overrides from the availability sheet, keyed "YYYY-MM-DD"
+const overrides = {};
+const isWeekend = (iso) => { const [y, m, d] = iso.split("-").map(Number); return [0, 6].includes(new Date(y, m - 1, d).getDay()); };
+const runsOn = (trips, id) => id === "custom" || trips === "all" || trips.includes(id);
+
+function dayStatus(iso) {
+  const o = overrides[iso];
+  if (o) return o;
+  return isWeekend(iso)
+    ? { open: true, trips: SCHEDULE.weekends }
+    : { open: true, trips: SCHEDULE.weekdays };
+}
+
+function tripDays(id) {
+  const wd = runsOn(SCHEDULE.weekdays, id), we = runsOn(SCHEDULE.weekends, id);
+  return wd && we ? "Every day" : we ? "Weekends" : wd ? "Weekdays" : "By request";
+}
+
+function tripsLabel(st) {
+  if (!st.open) return st.note || "Unavailable";
+  if (st.trips === "all") return "All trips";
+  if (st.trips.length === 1) return (findTrip(st.trips[0]) || {}).name || "Limited";
+  return "Select trips";
+}
+
+// Sheet columns: date, status, note. Status: off / booked / sunset only / open
+function toIso(s) {
+  s = s.trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if (!m) return null;
+  const y = m[3].length === 2 ? "20" + m[3] : m[3];
+  return `${y}-${m[1].padStart(2, "0")}-${m[2].padStart(2, "0")}`;
+}
+
+const availabilityReady = (async () => {
+  if (!CONFIG.availabilitySheet) return;
+  try {
+    const csv = await (await fetch(CONFIG.availabilitySheet, { cache: "no-store" })).text();
+    csv.split(/\r?\n/).slice(1).forEach((line) => {
+      const [date = "", status = "", ...rest] = line.split(",").map((c) => c.replace(/^"|"$/g, "").trim());
+      const iso = toIso(date);
+      const s = status.toLowerCase();
+      if (!iso || !s) return;
+      const note = rest.join(",").trim();
+      if (/off|booked|closed|on call|unavailable/.test(s)) overrides[iso] = { open: false, note: s.includes("booked") ? "Booked" : "Unavailable" };
+      else if (/sunset/.test(s)) overrides[iso] = { open: true, trips: ["sunset"], note };
+      else if (/open|all/.test(s)) overrides[iso] = { open: true, trips: "all", note };
+    });
+  } catch (err) {
+    console.warn("Availability sheet not loaded:", err);
+  }
+})();
+
 // Contact details everywhere
 $$("[data-cfg]").forEach((el) => { if (CONFIG[el.dataset.cfg]) el.textContent = CONFIG[el.dataset.cfg]; });
 $$('[data-cfg-link="tel"]').forEach((a) => (a.href = "tel:" + CONFIG.phoneDial));
@@ -166,22 +233,33 @@ if (spyTargets.length && "IntersectionObserver" in window) {
 }
 
 /* ---------- Trip cards ---------- */
+const ICON = {
+  clock: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  people: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"/></svg>',
+  cal: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+  sun: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+  sunset: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M17 18a5 5 0 0 0-10 0M12 2v7M4.2 10.2l1.4 1.4M1 18h2M21 18h2M18.4 11.6l1.4-1.4M23 22H1M8 6l4 4 4-4"/></svg>',
+};
+
 function card(c, island) {
   const href = `/?trip=${c.id}${island ? `&island=${island}` : ""}#book`;
   const isCustom = c.id === "custom";
+  const whenIcon = /sunset|afternoon/i.test(c.when) ? ICON.sunset : ICON.sun;
   return `
   <article class="trip${isCustom ? " trip-custom" : ""}">
-    <div class="trip-top">
-      <span class="when">${c.when}</span>
-      ${c.badge ? `<span class="badge">${c.badge}</span>` : ""}
-    </div>
+    ${c.badge ? `<span class="ribbon">${c.badge}</span>` : ""}
+    <span class="when">${whenIcon}${c.when}</span>
     <h3>${c.name}</h3>
-    <p class="trip-meta">${c.hours ? `${c.hours} hours &middot; ` : ""}Up to ${c.guests} guests</p>
+    <ul class="trip-stats">
+      ${c.hours ? `<li>${ICON.clock}${c.hours} hrs</li>` : ""}
+      <li>${ICON.people}Up to ${c.guests}</li>
+      <li>${ICON.cal}${tripDays(c.id)}</li>
+    </ul>
     <p class="desc">${c.desc}</p>
-    <ul>${c.perks.map((p) => `<li>${p}</li>`).join("")}</ul>
+    <ul class="perks">${c.perks.map((p) => `<li>${p}</li>`).join("")}</ul>
     <div class="trip-foot">
       <div class="price">${c.price ? `<small>From</small>${money(c.price)}` : `<small>Rate</small>Let's talk`}</div>
-      <a href="${href}" class="btn ${isCustom ? "btn-ghost" : "btn-primary"} btn-sm" data-pick="${c.id}"${island ? ` data-island="${island}"` : ""}>${isCustom ? "Plan It" : "Book This Trip"}</a>
+      <a href="${href}" class="btn ${isCustom ? "btn-ghost" : "btn-primary"} btn-sm" data-book data-pick="${c.id}"${island ? ` data-island="${island}"` : ""}>${isCustom ? "Plan It" : "Book This Trip"}</a>
     </div>
   </article>`;
 }
@@ -193,25 +271,39 @@ if (grid) {
   grid.innerHTML = trips.map((c) => card(c, island)).join("");
 }
 
-/* ---------- Booking form (home page) ---------- */
+/* ---------- Booking pop up ---------- */
+const dlg = $("#booking");
 const form = $("#book-form");
-if (form) {
-  const charterSel = $("#f-charter");
+if (dlg && form) {
   const islandSel = $("#f-island");
   const adultSel = $("#f-adults");
   const kidSel = $("#f-kids");
   const kidAges = $("#kid-ages");
   const guestNote = $("#guest-note");
+  const dateNote = $("#date-note");
+  const done = $("#bk-done");
 
-  charterSel.innerHTML += allTrips.map((t) =>
-    `<option value="${t.id}">${t.name}${t.hours ? ` (${t.hours} hrs)` : ""}</option>`).join("");
+  $("#trip-options").innerHTML = allTrips.map((t) => `
+    <label class="tp">
+      <input type="radio" name="charter" value="${t.id}">
+      <span class="tp-card">
+        <span class="tp-name">${t.name}</span>
+        <span class="tp-meta">${t.hours ? `${t.hours} hrs` : "Your call"}${t.price ? ` &middot; from ${money(t.price)}` : ""}</span>
+      </span>
+    </label>`).join("");
   islandSel.innerHTML += ISLANDS.map((i) => `<option value="${i.id}">${i.name}</option>`).join("");
 
   const today = new Date();
   today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
   $("#f-date").min = $("#f-alt-date").min = today.toISOString().slice(0, 10);
 
-  const maxGuests = () => (findTrip(charterSel.value) || { guests: 6 }).guests;
+  const tripId = () => form.elements.charter.value || "";
+  const asking = () => form.elements.request_type.value === "Question";
+  const maxGuests = () => (findTrip(tripId()) || { guests: 6 }).guests;
+  function setTrip(id) {
+    const r = $(`input[name="charter"][value="${id}"]`, form);
+    if (r) r.checked = true;
+  }
 
   function fillCounts() {
     const max = maxGuests();
@@ -225,10 +317,10 @@ if (form) {
 
   function checkGuests() {
     const max = maxGuests();
-    const total = +adultSel.value + +kidSel.value;
     const kids = +kidSel.value;
+    const total = +adultSel.value + kids;
     kidAges.hidden = kids === 0;
-    $("#f-ages").required = kids > 0;
+    $("#f-ages").required = !asking() && kids > 0;
     const over = total > max;
     guestNote.textContent = over
       ? `That's ${total} guests. This trip fits up to ${max}, so give us a call for bigger groups.`
@@ -238,13 +330,42 @@ if (form) {
     return !over;
   }
 
+  // Warn when the date doesn't fit the schedule; block days he's off
+  function checkDate() {
+    const iso = $("#f-date").value;
+    const field = $("#f-date").closest(".field");
+    field.classList.remove("invalid");
+    dateNote.hidden = true;
+    dateNote.classList.remove("is-warn");
+    if (!iso) return true;
+    const st = dayStatus(iso);
+    const t = findTrip(tripId());
+    let msg = "", ok = true, warn = false;
+    if (!st.open) {
+      msg = "Captain Ron isn't available that day. Please pick another date.";
+      ok = false;
+    } else if (t && !runsOn(st.trips, t.id)) {
+      const only = st.trips.length === 1 ? `the ${tripsLabel(st)}` : "select trips";
+      const usual = { Weekends: "on weekends", Weekdays: "on weekdays" }[tripDays(t.id)] || "by request";
+      msg = `${isWeekend(iso) ? "That day" : "Weekdays"} we're running ${only} only. ${t.name} usually runs ${usual}, but send the request and Ron will let you know.`;
+      warn = true;
+    } else if (st.note) {
+      msg = st.note;
+    }
+    if (msg) { dateNote.textContent = msg; dateNote.hidden = false; dateNote.classList.toggle("is-warn", warn || !ok); }
+    if (!ok) field.classList.add("invalid");
+    return ok;
+  }
+
   function updateSummary() {
-    const t = findTrip(charterSel.value);
+    const t = findTrip(tripId());
     const where = islandName(islandSel.value);
     fillCounts();
+    checkDate();
+    $("#trip-pick").classList.remove("invalid");
     if (!t) {
       $("#sum-name").textContent = "Pick a trip";
-      $("#sum-meta").textContent = "Choose from the menu or the form.";
+      $("#sum-meta").textContent = "Choose one to get started.";
       return;
     }
     $("#sum-name").textContent = t.name;
@@ -255,59 +376,96 @@ if (form) {
     $("#sum-meta").textContent = bits.join(" · ");
   }
 
-  function pick(trip, island) {
-    if (trip && findTrip(trip)) charterSel.value = trip;
-    if (island && islandName(island)) islandSel.value = island;
-    const t = findTrip(trip);
-    if (t && t.time) $("#f-time").value = t.time;
-    $('input[name="request_type"][value="Booking Request"]').checked = true;
-    setMode();
-    updateSummary();
-  }
-
-  charterSel.addEventListener("change", () => pick(charterSel.value));
-  islandSel.addEventListener("change", updateSummary);
-  adultSel.addEventListener("change", checkGuests);
-  kidSel.addEventListener("change", checkGuests);
-
-  // "Book This Trip" buttons on this page
-  document.addEventListener("click", (e) => {
-    const b = e.target.closest("[data-pick]");
-    if (b) pick(b.dataset.pick, b.dataset.island);
-  });
-
   // Book vs. Just Asking
   function setMode() {
-    const asking = $('input[name="request_type"]:checked').value === "Question";
-    $$(".booking-only", form).forEach((el) => (el.hidden = asking));
-    $("#f-date").required = !asking;
-    charterSel.required = !asking;
-    $("#f-ages").required = !asking && +kidSel.value > 0;
-    $("#notes-label").textContent = asking ? "Your question" : "Anything we should know?";
-    $("#f-notes").required = asking;
-    $("#submit-btn").innerHTML = asking ? "Send My Question &rarr;" : "Get Irie &rarr; Send Request";
+    const ask = asking();
+    form.classList.toggle("is-asking", ask);
+    $$(".booking-only", form).forEach((el) => (el.hidden = ask));
+    $("#f-date").required = !ask;
+    $("#f-ages").required = !ask && +kidSel.value > 0;
+    $("#notes-label").textContent = ask ? "Your question" : "Anything we should know?";
+    $("#f-notes").required = ask;
+    $("#submit-btn").innerHTML = ask ? "Send My Question &rarr;" : "Get Irie &rarr; Send Request";
   }
-  $$('input[name="request_type"]').forEach((r) => r.addEventListener("change", setMode));
+
+  form.addEventListener("change", (e) => {
+    const n = e.target.name;
+    if (n === "charter") {
+      const t = findTrip(tripId());
+      if (t && t.time) $("#f-time").value = t.time;
+      updateSummary();
+    } else if (n === "request_type") setMode();
+    else if (n === "island") updateSummary();
+    else if (n === "adults" || n === "kids") checkGuests();
+    else if (n === "date") checkDate();
+  });
+
+  function openBooking({ trip, island, date } = {}) {
+    form.hidden = false;
+    done.hidden = true;
+    $("#msg-err").hidden = true;
+    form.elements.request_type.value = "Booking Request";
+    if (trip) setTrip(trip);
+    if (island && islandName(island)) islandSel.value = island;
+    if (date) $("#f-date").value = date;
+    const t = findTrip(trip);
+    if (t && t.time) $("#f-time").value = t.time;
+    setMode();
+    updateSummary();
+    if (!dlg.open) dlg.showModal();
+    document.documentElement.classList.add("modal-open");
+    $(".bk-main", dlg).scrollTop = 0;
+    const first = tripId() ? (date ? $("#f-name") : $("#f-date")) : $(".tp input", form);
+    first.focus({ preventScroll: true });
+  }
+  const closeBooking = () => dlg.open && dlg.close();
+  window.openBooking = openBooking;
+  window.bookDate = (iso) => openBooking({ date: iso });
+
+  dlg.addEventListener("close", () => {
+    document.documentElement.classList.remove("modal-open");
+    if (location.hash === "#book") history.replaceState(null, "", location.pathname + location.search);
+  });
+  dlg.addEventListener("click", (e) => { if (e.target === dlg) closeBooking(); });
+  $$(".bk-close, .bk-close-done", dlg).forEach((b) => b.addEventListener("click", closeBooking));
+
+  // Any "Book" link on the page opens the pop up instead of jumping
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("[data-book], a[href$='#book']");
+    if (!a || dlg.contains(a) || e.metaKey || e.ctrlKey) return;
+    e.preventDefault();
+    const q = a.href ? new URL(a.href, location.href).searchParams : new URLSearchParams();
+    openBooking({ trip: a.dataset.pick || q.get("trip"), island: a.dataset.island || q.get("island") });
+  });
 
   setMode();
   updateSummary();
-  if (params.get("trip") || params.get("island")) pick(params.get("trip"), params.get("island"));
+  availabilityReady.then(checkDate);
+  if (location.hash === "#book" || params.get("trip")) {
+    openBooking({ trip: params.get("trip"), island: params.get("island") });
+  }
 
   function validate() {
     let ok = true;
     $$(".field", form).forEach((f) => f.classList.remove("invalid"));
     $$("input, select, textarea", form).forEach((el) => {
-      if (el.closest("[hidden]") || el.type === "checkbox" || el.type === "radio") return;
+      if (el.closest("[hidden]") || ["checkbox", "radio"].includes(el.type)) return;
       if (!el.checkValidity()) { el.closest(".field")?.classList.add("invalid"); ok = false; }
     });
-    if (!$("#guest-row").hidden && !checkGuests()) ok = false;
-    if (!ok) $(".invalid input, .invalid select, .invalid textarea", form)?.focus();
+    if (!asking() && !tripId()) { $("#trip-pick").classList.add("invalid"); ok = false; }
+    if (!asking() && !checkGuests()) ok = false;
+    if (!asking() && !checkDate()) ok = false;
+    if (!ok) {
+      const bad = $("#trip-pick.invalid input, .invalid input:not([type=radio]), .invalid select, .invalid textarea", form);
+      bad?.focus({ preventScroll: true });
+      bad?.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
     return ok;
   }
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    $("#msg-ok").hidden = $("#msg-err").hidden = true;
+    $("#msg-err").hidden = true;
     if (!validate()) return;
 
     const d = Object.fromEntries(new FormData(form));
@@ -345,14 +503,106 @@ if (form) {
       const json = await res.json();
       if (String(json.success) !== "true") throw new Error(json.message);
       form.reset();
-      updateSummary();
-      $("#msg-ok").hidden = false;
+      form.hidden = true;
+      done.hidden = false;
+      $(".bk-close-done", dlg).focus();
     } catch (err) {
       console.warn("Form error:", err);
       $("#msg-err").hidden = false;
     } finally {
       btn.disabled = false;
       setMode();
+      updateSummary();
     }
   });
+}
+
+/* ---------- Boat day forecast (Open-Meteo, free, no key) ---------- */
+const wxGrid = $("#wx-grid");
+if (wxGrid) {
+  const { lat, lon } = CONFIG.forecastSpot;
+  const tz = "America%2FNew_York";
+  const WX_URL = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant,sunset,uv_index_max&current=temperature_2m,wind_speed_10m,wind_direction_10m,weather_code&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=${tz}&forecast_days=7`;
+  const SEA_URL = `https://marine-api.open-meteo.com/v1/marine?latitude=${lat - 0.01}&longitude=${lon - 0.06}&daily=wave_height_max,wave_period_max&current=sea_surface_temperature,wave_height&length_unit=imperial&temperature_unit=fahrenheit&timezone=${tz}&forecast_days=7`;
+
+  const sky = (c) =>
+    c === 0 ? ["☀️", "Sunny"] : c <= 2 ? ["🌤️", "Mostly sunny"] : c === 3 ? ["☁️", "Cloudy"]
+    : c <= 48 ? ["🌫️", "Fog"] : c <= 57 ? ["🌦️", "Drizzle"] : c <= 67 ? ["🌧️", "Rain"]
+    : c <= 82 ? ["🌦️", "Showers"] : ["⛈️", "Storms"];
+  const compass = (deg) => ["N", "NE", "E", "SE", "S", "SW", "W", "NW"][Math.round(deg / 45) % 8];
+  const clock = (iso) => new Date(iso).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+  const ft = (n) => (n < 1 ? "Under 1" : n.toFixed(1).replace(".0", ""));
+
+  function rate(d) {
+    const { wind, waves, rain, code } = d;
+    if (wind >= 20 || waves >= 3.5 || (code >= 95 && rain >= 60)) return ["rough", "Rough"];
+    if (wind >= 15 || waves >= 2.5 || rain >= 50 || code >= 95) return ["iffy", "Iffy"];
+    if (wind >= 10 || waves >= 1.5 || rain >= 30) return ["good", "Good"];
+    return ["great", "Great"];
+  }
+
+  async function getJSON(url) {
+    const key = "wx:" + url;
+    try {
+      const hit = JSON.parse(sessionStorage.getItem(key) || "null");
+      if (hit && Date.now() - hit.t < 30 * 60 * 1000) return hit.v;
+    } catch (e) {}
+    const v = await (await fetch(url)).json();
+    try { sessionStorage.setItem(key, JSON.stringify({ t: Date.now(), v })); } catch (e) {}
+    return v;
+  }
+
+  (async () => {
+    try {
+      const [wx, sea] = await Promise.all([getJSON(WX_URL), getJSON(SEA_URL).catch(() => null)]);
+      await availabilityReady;
+      const D = wx.daily, S = sea && sea.daily;
+
+      const now = [
+        sea && sea.current ? ["Water", `${Math.round(sea.current.sea_surface_temperature)}°F`] : null,
+        ["Air", `${Math.round(wx.current.temperature_2m)}°F`],
+        ["Wind", `${Math.round(wx.current.wind_speed_10m)} mph ${compass(wx.current.wind_direction_10m)}`],
+        sea && sea.current ? ["Waves", `${ft(sea.current.wave_height)} ft`] : null,
+        ["Sunset", clock(D.sunset[0])],
+      ].filter(Boolean);
+      $("#wx-now").innerHTML = now.map(([k, v]) => `<div class="now-chip"><span>${k}</span><strong>${v}</strong></div>`).join("");
+
+      wxGrid.innerHTML = D.time.map((iso, i) => {
+        const day = {
+          wind: D.wind_speed_10m_max[i], gust: D.wind_gusts_10m_max[i],
+          waves: S ? S.wave_height_max[i] : 0, rain: D.precipitation_probability_max[i] || 0, code: D.weather_code[i],
+        };
+        const [cls, label] = rate(day);
+        const [icon, skyText] = sky(day.code);
+        const st = dayStatus(iso);
+        const [y, m, d] = iso.split("-").map(Number);
+        const date = new Date(y, m - 1, d);
+        const dow = i === 0 ? "Today" : date.toLocaleDateString("en-US", { weekday: "short" });
+        return `
+        <button type="button" class="wx-day wx-${cls}${st.open ? "" : " is-closed"}" data-date="${iso}" ${st.open ? "" : "disabled"}
+          aria-label="${dow} ${date.toLocaleDateString("en-US", { month: "long", day: "numeric" })}: ${label} boat day, ${skyText}. ${tripsLabel(st)}.">
+          <span class="wx-head"><span class="wx-dow">${dow}</span><span class="wx-date">${date.toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span></span>
+          <span class="wx-icon" aria-hidden="true">${icon}</span>
+          <span class="wx-temp">${Math.round(D.temperature_2m_max[i])}°<small>${Math.round(D.temperature_2m_min[i])}°</small></span>
+          <span class="wx-rating"><i></i>${label}</span>
+          <span class="wx-stats">
+            <span><b>Wind</b>${Math.round(day.wind)} mph ${compass(D.wind_direction_10m_dominant[i])}</span>
+            ${S ? `<span><b>Waves</b>${ft(day.waves)} ft</span>` : ""}
+            <span><b>Rain</b>${day.rain}%</span>
+            <span><b>Sunset</b>${clock(D.sunset[i])}</span>
+          </span>
+          <span class="wx-avail">${tripsLabel(st)}</span>
+          ${st.open ? `<span class="wx-cta">Book this day</span>` : ""}
+        </button>`;
+      }).join("");
+
+      wxGrid.addEventListener("click", (e) => {
+        const b = e.target.closest(".wx-day");
+        if (b && !b.disabled && window.bookDate) window.bookDate(b.dataset.date);
+      });
+    } catch (err) {
+      console.warn("Forecast unavailable:", err);
+      $("#forecast").hidden = true;
+    }
+  })();
 }
