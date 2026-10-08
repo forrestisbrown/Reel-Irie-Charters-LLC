@@ -15,6 +15,7 @@
  * Everything else is the static site (env.ASSETS).
  */
 import { notifyCaptain } from "./email.js";
+import { gate } from "./gate.js";
 import schema from "./schema.sql";
 
 // Creates the tables on first use, so a fresh database needs no manual setup
@@ -48,6 +49,8 @@ export default {
     const path = url.pathname;
 
     try {
+      const stop = await gate(request, env, url);
+      if (stop) return stop;
       if (path.startsWith("/api/") || path === "/admin" || path.startsWith("/admin/")) await ensureSchema(env);
       if (path === "/api/book" && request.method === "POST") return await book(request, env, ctx, url);
       if (path === "/api/availability" && request.method === "GET") return await availability(env);

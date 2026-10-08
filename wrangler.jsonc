@@ -16,8 +16,9 @@
     "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page",
-    // The worker checks the captain's login before serving these
-    "run_worker_first": ["/admin", "/admin/*", "/api/*"]
+    // The worker sees every request first (pre-launch passcode, captain's login).
+    // At launch, once SITE_PASSCODE is deleted, this can go back to ["/admin", "/admin/*", "/api/*"]
+    "run_worker_first": true
   },
 
   // Bookings and calendar. Create once with: npx wrangler d1 create reel-irie
