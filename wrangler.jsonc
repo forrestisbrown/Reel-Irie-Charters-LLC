@@ -33,7 +33,8 @@
     "ACCESS_TEAM_DOMAIN": "",
     "ACCESS_AUD": "",
     // Booking emails go here until Email Routing (below) is set up
-    "FORMSUBMIT_EMAIL": "reeliriecharters@gmail.com"
+    // Server side FormSubmit gets rate limited on Cloudflare, so the browser sends booking emails.
+    "FORMSUBMIT_EMAIL": ""
     // Once Email Routing is on for the domain, add:
     // "NOTIFY_FROM": "bookings@reeliriecharters.com",
     // "NOTIFY_TO": "<captain's verified email>"

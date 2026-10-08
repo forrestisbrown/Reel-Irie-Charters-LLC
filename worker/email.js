@@ -91,7 +91,7 @@ export async function notifyCaptain(env, b, origin) {
   }
 
   if (env.FORMSUBMIT_EMAIL) {
-    await fetch(`https://formsubmit.co/ajax/${env.FORMSUBMIT_EMAIL}`, {
+    const res = await fetch(`https://formsubmit.co/ajax/${env.FORMSUBMIT_EMAIL}`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json", Referer: origin + "/", Origin: origin },
       body: JSON.stringify({
@@ -101,5 +101,8 @@ export async function notifyCaptain(env, b, origin) {
         "Captain's Deck": `${origin}/admin/`,
       }),
     });
+    const body = await res.text();
+    console.log("FormSubmit", res.status, body.slice(0, 300));
+    if (!res.ok || !/"success":\s*"?true/.test(body)) throw new Error(`FormSubmit ${res.status}: ${body.slice(0, 200)}`);
   }
 }

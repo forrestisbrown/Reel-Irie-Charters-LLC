@@ -447,15 +447,21 @@ if (dlg && form) {
       } catch (err) { /* no API here; fall through to email */ }
       if (problem) { errBox.textContent = problem; throw new Error(problem); }
 
-      // 2) No API (static preview): email it straight through FormSubmit
+      // 2) Email Captain Ron from the visitor's browser. (FormSubmit rate limits
+      //    requests from Cloudflare's servers, so the worker can't send it.)
+      payload["Captain's Deck"] = `${location.origin}/admin/`;
+      const mail = fetch(`https://formsubmit.co/ajax/${CONFIG.formEmail}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+        keepalive: true,
+      });
       if (!saved) {
-        const res = await fetch(`https://formsubmit.co/ajax/${CONFIG.formEmail}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify(payload),
-        });
-        const json = await res.json();
+        // Nothing was saved, so the email is the only copy: it has to succeed
+        const json = await (await mail).json();
         if (String(json.success) !== "true") throw new Error(json.message);
+      } else {
+        mail.catch((err) => console.warn("Email alert failed (booking is saved):", err));
       }
       form.reset();
       count.adults = 2; count.kids = 0;
