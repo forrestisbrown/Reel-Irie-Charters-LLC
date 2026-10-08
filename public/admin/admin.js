@@ -42,7 +42,7 @@ async function load() {
   state.bookings = b.bookings;
   state.today = b.today || state.today;
   state.days = Object.fromEntries(d.days.map((x) => [x.date, x]));
-  $("#hello").textContent = /ron/i.test(me.email) ? "Ahoy, Captain Ron" : me.email;
+  $("#hello").textContent = me.email.toLowerCase() === String(CONFIG.email || "").toLowerCase() ? "Ahoy, Captain Ron" : me.email;
   render();
 }
 

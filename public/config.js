@@ -9,7 +9,8 @@ const CONFIG = {
   phoneDial: "+17273861281",         // used for tap to call / text
   // Where booking requests are sent (FormSubmit.co). The first request sends an
   // activation email to this address; click it once and requests start arriving.
-  formEmail: "forrestisbrown@icloud.com",
+  formEmail: "reeliriecharters@gmail.com",
+  email: "reeliriecharters@gmail.com",
   // Optional: a Google Sheet (File > Share > Publish to web > CSV) listing days off,
   // on call days and booked dates. Leave "" to use only the weekly schedule below.
   availabilitySheet: "",

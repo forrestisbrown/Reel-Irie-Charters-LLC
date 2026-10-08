@@ -19,6 +19,7 @@ BUSINESS = "Reel Irie Charters"
 LEGAL = "Reel Irie Charters LLC"
 PHONE = "(727) 386-1281"
 PHONE_DIAL = "+17273861281"
+EMAIL = "reeliriecharters@gmail.com"
 
 ISLANDS = [
     {
@@ -463,6 +464,7 @@ def footer():
         <ul>
           <li><a data-cfg-link="tel" href="tel:{PHONE_DIAL}">Call <span data-cfg="phone">{PHONE}</span></a></li>
           <li><a data-cfg-link="sms" href="sms:{PHONE_DIAL}">Send a text</a></li>
+          <li><a href="mailto:{EMAIL}">{EMAIL}</a></li>
           <li><a href="/#book">Booking request</a></li>
         </ul>
       </div>
@@ -494,6 +496,7 @@ def local_business():
         "alternateName": BUSINESS,
         "description": "Private island hopping and sunset boat charters out of St. Pete and Clearwater, Florida.",
         "telephone": PHONE_DIAL,
+        "email": EMAIL,
         "image": "/images/og-image.jpg",
         "areaServed": ["St. Petersburg, FL", "Clearwater, FL", "Pinellas County, FL"],
         "address": {"@type": "PostalAddress", "addressLocality": "St. Petersburg", "addressRegion": "FL", "addressCountry": "US"},

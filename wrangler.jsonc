@@ -28,12 +28,12 @@
 
   "vars": {
     // Who can open /admin (comma separated). Must match the Cloudflare Access policy.
-    "ADMIN_EMAILS": "forrestisbrown@icloud.com",
+    "ADMIN_EMAILS": "reeliriecharters@gmail.com,forrestisbrown@icloud.com",
     // From Zero Trust > Settings (team domain) and the Access application's AUD tag
     "ACCESS_TEAM_DOMAIN": "",
     "ACCESS_AUD": "",
     // Booking emails go here until Email Routing (below) is set up
-    "FORMSUBMIT_EMAIL": "forrestisbrown@icloud.com"
+    "FORMSUBMIT_EMAIL": "reeliriecharters@gmail.com"
     // Once Email Routing is on for the domain, add:
     // "NOTIFY_FROM": "bookings@reeliriecharters.com",
     // "NOTIFY_TO": "<captain's verified email>"
